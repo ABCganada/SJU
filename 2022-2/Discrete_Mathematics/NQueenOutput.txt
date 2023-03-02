@@ -1,0 +1,76 @@
+Matrix Size: 4 by 4
+X X O X 
+O X X X 
+X X X O 
+X O X X 
+
+X O X X 
+X X X O 
+O X X X 
+X X O X 
+
+Total possible arrangement: 2
+#############################
+Matrix Size: 5 by 5
+O X X X X 
+X X X O X 
+X O X X X 
+X X X X O 
+X X O X X 
+
+O X X X X 
+X X O X X 
+X X X X O 
+X O X X X 
+X X X O X 
+
+X X O X X 
+O X X X X 
+X X X O X 
+X O X X X 
+X X X X O 
+
+X X X O X 
+O X X X X 
+X X O X X 
+X X X X O 
+X O X X X 
+
+X O X X X 
+X X X O X 
+O X X X X 
+X X O X X 
+X X X X O 
+
+X X X X O 
+X X O X X 
+O X X X X 
+X X X O X 
+X O X X X 
+
+X O X X X 
+X X X X O 
+X X O X X 
+O X X X X 
+X X X O X 
+
+X X X X O 
+X O X X X 
+X X X O X 
+O X X X X 
+X X O X X 
+
+X X X O X 
+X O X X X 
+X X X X O 
+X X O X X 
+O X X X X 
+
+X X O X X 
+X X X X O 
+X O X X X 
+X X X O X 
+O X X X X 
+
+Total possible arrangement: 10
+#############################
