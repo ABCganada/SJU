@@ -9,9 +9,10 @@ int Cmd();      // 프로그램 메뉴
 void Load(char *fileName);  // 파일 로드
 void Print(char *fileName); // 파일 출력
 void Update(char* fileName, char* target, char* replace);   // 파일의 키워드 수정
-void Delete(char* fileName, char* target);  // 파일의 키워드 삭제
-void Find(char* fileName, char* target);    // 파일의 키워드 찾기
+void Delete(char* fileName, char* keword);  // 파일의 키워드 삭제
+void Find(char* fileName, char* keyword);    // 파일의 키워드 찾기
 int Save(char *fileName, char *newFileName);    // 파일 새로 저장
+int fileIsValid(FILE *fp);
 
 int main() {
     FILE *fp=NULL;
@@ -102,131 +103,135 @@ void Load(char* fileName) { //파일 로드
     FILE *fp;
 
     fp = fopen(fileName, "r");
-    if (fp == NULL) {
-        printf("~ Fail : Load File \"%s\"\n", fileName);
+    if(!fileIsValid(fp)){
         return;
     }
+
     printf("~ Success : Load File: \"%s\"\n", fileName);
     fclose(fp);
 }
 void Print(char* fileName) {    // 파일 출력
     FILE *fp;
-    char content[MAX_CONTENT_LEN];
+    char buffer[MAX_CONTENT_LEN];
 
     fp = fopen(fileName, "r");
-    if (fp == NULL) {   // 유효성 검사
-        printf("~ Fail : Load File \"%s\"\n", fileName);
+    if(!fileIsValid(fp)){
         return;
     }
 
-    while(fgets(content, MAX_CONTENT_LEN, fp) != NULL){
-        printf("%s", content);
+    while(fgets(buffer, MAX_CONTENT_LEN, fp) != NULL){
+        printf("%s", buffer);
     }
     fclose(fp);
 }
 void Update(char* fileName, char* target, char* replace) {
     FILE *fp;
-    char content[MAX_CONTENT_LEN];
-    char newContent[MAX_CONTENT_LEN] = {'\0'};
+    char buffer[MAX_CONTENT_LEN];
+    char newBuffer[MAX_CONTENT_LEN] = {'\0'};
 
     fp = fopen(fileName, "r");
-    if (fp == NULL) {   // 유효성 검사
-        printf("~ Fail : Load File \"%s\"\n", fileName);
+    if(!fileIsValid(fp)){
         return;
     }
     
-    while (fgets(content, MAX_CONTENT_LEN, fp) != NULL) {
-        char *ptr = content;
+    while (fgets(buffer, MAX_CONTENT_LEN, fp) != NULL) {
+        char *ptr = buffer;
         char *index;
         int targetLen = strlen(target);
         int replaceLen = strlen(replace);
         while ((index = strstr(ptr, target)) != NULL) {
-            strncat(newContent, ptr, index - ptr);
-            strncat(newContent, replace, replaceLen);
+            strncat(newBuffer, ptr, index - ptr);
+            strncat(newBuffer, replace, replaceLen);
             ptr = index + targetLen;
         }
-        strcat(newContent, ptr);
+        strcat(newBuffer, ptr);
     }
 
     fclose(fp);
     fp = fopen(fileName, "w");
-    if (fp == NULL) {
-        printf("~ Fail : Load File \"%s\"\n", fileName);
+    if(!fileIsValid(fp)){
         return;
     }
-    fprintf(fp, "%s", newContent);
+
+    fprintf(fp, "%s", newBuffer);
     printf("~ Success : File Update \"%s\"\n", fileName);
     fclose(fp);
 }
 
-void Delete(char* fileName, char* target) {
+void Delete(char* fileName, char* keyword) {
     FILE *fp;
-    char content[MAX_CONTENT_LEN];
-    char newContent[MAX_CONTENT_LEN] = {0};
+    char buffer[MAX_CONTENT_LEN];
+    char newBuffer[MAX_CONTENT_LEN] = {0};
+
     fp = fopen(fileName, "r");
-    if (fp == NULL) {
-        printf("~ Fail : Load File \"%s\"\n", fileName);
+    if(!fileIsValid(fp)){
         return;
     }
-    while (fgets(content, MAX_CONTENT_LEN, fp) != NULL) {
-        char *ptr = content;
+
+    while (fgets(buffer, MAX_CONTENT_LEN, fp) != NULL) {
+        char *ptr = buffer;
         char *index;
-        int targetLen = strlen(target);
-        while ((index = strstr(ptr, target)) != NULL) {
-            strncat(newContent, ptr, index - ptr);
+        int targetLen = strlen(keyword);
+        while ((index = strstr(ptr, keyword)) != NULL) {
+            strncat(newBuffer, ptr, index - ptr);
             ptr = index + targetLen;
         }
-        strcat(newContent, ptr);
+        strcat(newBuffer, ptr);
     }
     fclose(fp);
+
     fp = fopen(fileName, "w");
-    if (fp == NULL) {
-        printf("~ Fail : Load File \"%s\"\n", fileName);
+    if(!fileIsValid(fp)){
         return;
     }
-    fprintf(fp, "%s", newContent);
+
+    fprintf(fp, "%s", newBuffer);
     printf("~ Success : File Delete \"%s\"\n", fileName);
     fclose(fp);
 }
 
 void Find(char *fileName, char *keyword) {
     FILE *fp;
-    char line[256];
-    int line_num = 1;
+    char buffer[MAX_CONTENT_LEN];
 
     fp = fopen(fileName, "r");
-    if (fp == NULL) {
-        printf("~ Fail : Load File \"%s\"\n", fileName);
+    if(!fileIsValid(fp)){
         return;
     }
 
-    while (fgets(line, sizeof(line), fp) != NULL) {
-        if (strstr(line, keyword) != NULL) {
-            printf("Line %d: %s", line_num, line);
+    while(fgets(buffer, MAX_CONTENT_LEN, fp) != NULL){
+        // 문자열 탐색, buffer에 keword가 있으면
+        if(strstr(buffer, keyword) != NULL){
+            printf("~ Find Content : %s", buffer);
         }
-        line_num++;
     }
-
     fclose(fp);
 }
 int Save(char *fileName, char *newFileName) {
     FILE *fp, *newFp;
     char content[MAX_CONTENT_LEN];
+
     fp = fopen(fileName, "r");
-    if (fp == NULL) {
-        printf("~ Fail : Load Existing File \"%s\"\n", fileName);
-        return 0;
+    if(!fileIsValid(fp)){
+        return;
     }
+
     newFp = fopen(newFileName, "w");
-    if (newFp == NULL) {
-        printf("~ Fail : Load New File \"%s\"\n", newFileName);
-        fclose(fp);
-        return 0;
+    if(!fileIsValid(newFp)){
+        return;
     }
+
     while (fgets(content, MAX_CONTENT_LEN, fp) != NULL) {
         fputs(content, newFp);
     }
     fclose(fp);
     fclose(newFp);
+    return 1;
+}
+int fileIsValid(FILE *fp){
+    if(fp == NULL){
+        printf("~ Fail : Load File\n");
+        return 0;
+    }
     return 1;
 }
