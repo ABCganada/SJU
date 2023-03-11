@@ -6,9 +6,11 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QMessageBox>
+#include <QInputDialog>
 
 void fileLoad(QTextEdit *textEdit);
 void filePrint(QTextEdit *textEdit);
+void fileUpdate(QTextEdit *textEdit);
 
 int main(int argc, char *argv[])
 {
@@ -20,13 +22,17 @@ int main(int argc, char *argv[])
     QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(textEdit);
 
-    QPushButton *loadButton = new QPushButton("Load File");
+    QPushButton *loadButton = new QPushButton("File Load");
     QAbstractButton::connect(loadButton, &QPushButton::clicked, [textEdit]() { fileLoad(textEdit); });
     layout->addWidget(loadButton);
 
-    QPushButton *printButton = new QPushButton("Print File");
+    QPushButton *printButton = new QPushButton("File Print");
     QAbstractButton::connect(printButton, &QPushButton::clicked, [textEdit]() { filePrint(textEdit); });
     layout->addWidget(printButton);
+
+    QPushButton *updateButton = new QPushButton("File Update");
+    QAbstractButton::connect(updateButton, &QPushButton::clicked, [textEdit]() { fileUpdate(textEdit); });
+    layout->addWidget(updateButton);
 
     window->setLayout(layout);
     window->show();
@@ -55,3 +61,27 @@ void filePrint(QTextEdit *textEdit)
     QString text = textEdit->toPlainText();
     QMessageBox::information(nullptr, "File Contents", text);
 }
+
+void fileUpdate(QTextEdit *textEdit)
+{
+    QString target = QInputDialog::getText(nullptr, "Target", "");
+    if (target.isEmpty()) {
+        return;
+    }
+
+    QString replace = QInputDialog::getText(nullptr, "Replace", "");
+    if (replace.isNull()) {
+        return;
+    }
+
+    QString contents = textEdit->toPlainText();
+    contents.replace(target, replace);
+
+    QTextCursor cursor = textEdit->textCursor();
+    cursor.select(QTextCursor::Document);
+    cursor.removeSelectedText();
+    cursor.insertText(contents);
+
+    QMessageBox::information(nullptr, "Success", "File updated successfully.");
+}
+
