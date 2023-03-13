@@ -10,7 +10,7 @@
 #include <QString>
 #include <QStringList>
 #include <QRegularExpression>
-#include <QRegularExpressionMatchIterator>
+#include <QRegularExpressionMatch>
 
 void fileLoad(QTextEdit *textEdit);     // file Load 함수
 void filePrint(QTextEdit *textEdit);    // file Print 함수
@@ -121,25 +121,22 @@ void fileDelete(QTextEdit *textEdit){
 }
 void fileFind(QTextEdit *textEdit)
 {
-    QString searchText = QInputDialog::getText(nullptr, "Find Text", "Enter the text to find:", QLineEdit::Normal, QString(), nullptr);
-
-    if (searchText.isEmpty())
-        return;
-
     QString textContent = textEdit->toPlainText();
-    QString pattern = QString("\\b.+%1.+[.?!]\\b").arg(searchText);
+    QString keyword = QInputDialog::getText(nullptr, "Find", "");
+    QStringList searchResults;
 
-    QRegularExpression re(pattern);
-    QRegularExpressionMatchIterator matches = re.globalMatch(textContent);
-
-    QString searchResults;
-    while (matches.hasNext()) {
-        QRegularExpressionMatch match = matches.next();
-        searchResults.append(match.captured(0) + "\n");
+    QRegularExpression re(keyword, QRegularExpression::CaseInsensitiveOption);
+    QTextStream textStream(&textContent);
+    while (!textStream.atEnd()) {
+        QString line = textStream.readLine();
+        QRegularExpressionMatch match = re.match(line);
+        if (match.hasMatch()) {
+            searchResults.append("FOUND : " + line);
+        }
     }
 
     if (searchResults.isEmpty())
         QMessageBox::information(nullptr, "Not Found", "The text could not be found.");
     else
-        QMessageBox::information(nullptr, "Search Results", searchResults);
+        QMessageBox::information(nullptr, "Search Results", searchResults.join("\n"));
 }
