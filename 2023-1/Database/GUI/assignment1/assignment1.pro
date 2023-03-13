@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = name_of_the_app
+TARGET = FileWorker
 
 QT = core gui
 
