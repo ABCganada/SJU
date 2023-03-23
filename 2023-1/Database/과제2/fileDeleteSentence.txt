@@ -1,0 +1,53 @@
+Detailed Description
+Introduction and Concepts
+QTextEdit is an advanced WYSIWYG viewer/editor supporting rich text formatting using HTML-style tags, or Markdown format. It is optimized to handle large documents and to respond quickly to user input.
+
+QTextEdit works on paragraphs and characters. A paragraph is a formatted string which is word-wrapped to fit into the width of the widget. By default when reading plain text, one newline signifies a paragraph. A document consists of zero or more paragraphs. The words in the paragraph are aligned in accordance with the paragraph's alignment. Paragraphs are separated by hard line breaks. Each character within a paragraph has its own attributes, for example, font and color.
+
+QTextEdit can display images, lists and tables. If the text is too large to view within the text edit's viewport, scroll bars will appear. The text edit can load both plain text and rich text files. Rich text can be described using a subset of HTML 4 markup; refer to the Supported HTML Subset page for more information.
+
+If you just need to display a small piece of rich text use QLabel.
+
+The rich text support in Qt is designed to provide a fast, portable and efficient way to add reasonable online help facilities to applications, and to provide a basis for rich text editors. If you find the HTML support insufficient for your needs you may consider the use of Qt WebKit, which provides a full-featured web browser widget.
+
+
+
+Using QTextEdit as a Display Widget
+QTextEdit can display a large HTML subset, including tables and images.
+
+The text can be set or replaced using setHtml() which deletes any existing text and replaces it with the text passed in the setHtml() call. If you call setHtml() with legacy HTML, and then call toHtml(), the text that is returned may have different markup, but will render the same. The entire text can be deleted with clear().
+
+Text can also be set or replaced using setMarkdown(), and the same caveats apply: if you then call toMarkdown(), the text that is returned may be different, but the meaning is preserved as much as possible. Markdown with some embedded HTML can be parsed, with the same limitations that setHtml() has; but toMarkdown() only writes "pure" Markdown, without any embedded HTML.
+
+Text itself can be inserted using the QTextCursor class or using the convenience functions insertHtml(), insertPlainText(), append() or paste(). QTextCursor is also able to insert complex objects like tables or lists into the document, and it deals with creating selections and applying changes to selected text.
+
+By default the text edit wraps words at whitespace to fit within the text edit widget. The setLineWrapMode() function is used to specify the kind of line wrap you want, or NoWrap if you don't want any wrapping. Call setLineWrapMode() to set a fixed pixel width FixedPixelWidth, or character column (e.g. 80 column) FixedColumnWidth with the pixels or columns specified with setLineWrapColumnOrWidth(). If you use word wrap to the widget's width WidgetWidth, you can specify whether to break on whitespace or anywhere with setWordWrapMode().
+
+The find() function can be used to find and select a given string within the text.
+
+If you want to limit the total number of paragraphs in a QTextEdit, as for example it is often useful in a log viewer, then you can use QTextDocument's maximumBlockCount property for that.
+
+
+
+UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE UPDATE 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
