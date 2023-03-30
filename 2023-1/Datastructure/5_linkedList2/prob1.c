@@ -1,20 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct __node{
+typedef struct __node{      // 단일 연결 리스트
     int coef, exp;
     struct __node *next;
 }Node;
 
-typedef struct __list{
+typedef struct __list{      // header 가지고 있는 리스트
     struct __node *header;
 }List;
 
-void init(List *plist);
-void appendTerm(List *plist, int coef, int exp);
-List addPoly(List *plist1, List *plist2);
-Node *getNode();
-void freeList(List *plist);
+void init(List *plist);     // List 초기화
+void appendTerm(List *plist, int coef, int exp);    // 입력값 단일연결리스트 연결
+List addPoly(List *plist1, List *plist2);           // 다항식 덧셈
+Node *getNode();        // node 생성
+void freeList(List *plist); // List의 메모리 해제
 
 int main()
 {
@@ -25,49 +25,30 @@ int main()
 
     int i, n1, n2, coef, exp;
 
-    scanf("%d", &n1);
+    scanf("%d", &n1);                   // 1번째 다항식 항의 개수
     for(i=0; i<n1; i++){
         scanf("%d %d", &coef, &exp);
-        appendTerm(&list1, coef, exp);
+        appendTerm(&list1, coef, exp);  // 항 추가 함수 호출
     }
-    // ptrNode = list1.header->next;
-    // while(1){
-    //     printf(" %d %d", ptrNode->coef, ptrNode->exp);
-    //     if(!ptrNode->next)
-    //         break;
-    //     ptrNode = ptrNode->next;
-    // }
-    // printf("\n");
 
-    scanf("%d", &n2);
-    for(i=0; i<n2; i++){
+    scanf("%d", &n2);                   // 2번째 다항식 항의 개수
+    for(i=0; i<n2; i++){     
         scanf("%d %d", &coef, &exp);
-        appendTerm(&list2, coef, exp);
+        appendTerm(&list2, coef, exp);  // 항 추가 함수 호출
     }
-    // ptrNode = list2.header->next;
-    // while(1){
-    //     printf(" %d %d", ptrNode->coef, ptrNode->exp);
-    //     if(!ptrNode->next)
-    //         break;
-    //     ptrNode = ptrNode->next;
-    // }
-    // printf("\n");
-    result = addPoly(&list1, &list2);
 
+    result = addPoly(&list1, &list2);   // result List에 다항식 덧셈 리턴값 저장
     ptrNode = result.header->next;
-    while(1){
-        if(ptrNode->coef != 0)
-            printf(" %d %d", ptrNode->coef, ptrNode->exp);
-        if(!ptrNode->next)
-            break;
+    while(ptrNode != NULL){
+        printf(" %d %d", ptrNode->coef, ptrNode->exp);
         ptrNode = ptrNode->next;
     }
     printf("\n");
     
-    free(ptrNode);
-    // freeList(&list1);
-    // freeList(&list2);
-    // freeList(&result);
+    free(ptrNode);      // 노드 포인터 메모리 해제
+    freeList(&list1);   // 1번째 다항식 메모리 해제
+    freeList(&list2);   // 2번째 다항식 메모리 해제
+    freeList(&result);  // 합한 다항식 메모리 해제
 
     return 0;
 }
@@ -108,7 +89,8 @@ List addPoly(List *plist1, List *plist2){
         }
         else{
             int sumCoef = p1->coef + p2->coef;
-            appendTerm(&result, sumCoef, p1->exp);
+            if(sumCoef != 0)
+                appendTerm(&result, sumCoef, p1->exp);
             p1 = p1->next;
             p2 = p2->next;
         }
@@ -138,9 +120,8 @@ void freeList(List *plist){
     while(1){
         current = next;
         next = current->next;
-        if(current == NULL)
-            break;
         free(current);
-
+        if(current->next == NULL)
+            break;
     }
 }
