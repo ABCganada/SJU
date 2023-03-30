@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// 수정할 포인트: 노드 append시 마지막 노드를 기억해 시간복잡도 O(1)로 만들어보자.
+
 typedef struct __node{      // 단일 연결 리스트
     int coef, exp;
     struct __node *next;
