@@ -18,6 +18,8 @@ typedef struct __node{                                  // 항에 대한 노드
 Node *appendFirst(Node *headNode, int coef, int exp);   // append (if head == NULL)
 void appendTerm(Node *ptrNode, int coef, int exp);      // append (if head != NULL)
 Node *addPoly(Node *poly1, Node *poly2);                // poly1 + poly2 다항식 리턴 함수
+void printPoly(Node *headNode);                         // 다항식 출력 함수
+void freePoly(Node *headNode);                          // 다항식 메모리 해제 함수
 
 int main()
 {
@@ -25,56 +27,36 @@ int main()
     Node *ptr;                                          // pointer node
     int i, numA, numB, coef, exp;
 
-    scanf("%d", &numA);                                 // 다항식A의 항의 개수
-    if(numA){                                           // 항의 개수가 양의 정수일 때
-        for(i=0; i<numA; i++){
-            scanf("%d%d", &coef, &exp);                 // coef, exp 입력
+    scanf("%d", &numA);                             // 다항식A의 항의 개수
+    for(i=0; i<numA; i++){
+        scanf("%d%d", &coef, &exp);                 // coef, exp 입력
 
-            if(!headA){                                 // head가 초기화 상태일 때
-                headA = appendFirst(headA, coef, exp);  // appendFirst 리턴값을 head에 전달
-                ptr = headA;                            // ptr를 head에 연결
-                continue;
-            }
-            appendTerm(ptr, coef, exp);                 // appendTerm
-            ptr = ptr->next;                            // ptr, 다음 노드로 이동
+        if(!headA){                                 // head가 초기화 상태일 때
+            headA = appendFirst(headA, coef, exp);  // appendFirst 리턴값을 head에 전달
+            ptr = headA;                            // ptr를 head에 연결
+            continue;
         }
+        appendTerm(ptr, coef, exp);                 // appendTerm
+        ptr = ptr->next;                            // ptr, 다음 노드로 이동
     }
 
-    scanf("%d", &numB);                                 // 다항식B의 항의 개수
-    if(numB){                                           // 항의 개수가 양의 정수일 때
-        for(i=0; i<numB; i++){
-            scanf("%d%d", &coef, &exp);                 // coef, exp 입력
+    scanf("%d", &numB);                             // 다항식B의 항의 개수
+    for(i=0; i<numB; i++){
+        scanf("%d%d", &coef, &exp);                 // coef, exp 입력
 
-            if(!headB){                                 // head가 초기화 상태일 때
-                headB = appendFirst(headB, coef, exp);  // appendFirst 리턴값을 head에 전달
-                ptr = headB;                            // ptr를 head에 연결
-                continue;
-            }
-            appendTerm(ptr, coef, exp);                 // appendTerm
-            ptr = ptr->next;                            // ptr, 다음 노드로 이동
+        if(!headB){                                 // head가 초기화 상태일 때
+            headB = appendFirst(headB, coef, exp);  // appendFirst 리턴값을 head에 전달
+            ptr = headB;                            // ptr를 head에 연결
+            continue;
         }
+        appendTerm(ptr, coef, exp);                 // appendTerm
+        ptr = ptr->next;                            // ptr, 다음 노드로 이동
     }
 
     headC = addPoly(headA, headB);                      // 다항식C = 다항식A + 다항식B
 
-    ptr = headC;                                        // 다항식C 출력
-    while(ptr){                                         
-        printf(" %d %d", ptr->coef, ptr->exp);
-        ptr = ptr->next;
-    }
-    printf("\n");
-
-    Node *current = headC;                              // 메모리 해제
-    Node *next = current->next;
-    while(1){
-        free(current);
-        current = next;
-        if(current == NULL)
-            break;
-        next = current->next;
-    }
-
-
+    printPoly(headC);       // 다항식 출력
+    freePoly(headC);        // 메모리 해제
 
     return 0;
 }
@@ -139,7 +121,7 @@ Node *addPoly(Node *polyHead1, Node *polyHead2){        // 다항식 덧셈 함�
             ptrNode2 = polyHead2->next;
             polyHead2->next = NULL;         // 다항식2 제일 앞부분 연결 해제
 
-            polyHead1->coef += polyHead2->coef; //
+            polyHead1->coef += polyHead2->coef; // 차수 덧셈
 
             if(polyHead1->coef != 0){           // 계수가 0이 아니면
                 if(!resultHead){                // result 다항식이 NULL이면
@@ -165,9 +147,9 @@ Node *addPoly(Node *polyHead1, Node *polyHead2){        // 다항식 덧셈 함�
         polyHead1->next = NULL;
         
         if(!resultHead){                    // result 다항식이 NULL이면
-                resultHead = polyHead1;     // result헤드, 1다항식헤드를 가리킴
-                ptrRes = resultHead;        // result에 대한 포인터 연결
-            }
+            resultHead = polyHead1;     // result헤드, 1다항식헤드를 가리킴
+            ptrRes = resultHead;        // result에 대한 포인터 연결
+        }
         else{                           // result 다항식이 NULL이 아니면
             ptrRes->next = polyHead1;   // result포인터, 다음 노드에 1다항식헤드 연결
             ptrRes = ptrRes->next;      // result포인터, 다음 노드로 이동
@@ -178,11 +160,11 @@ Node *addPoly(Node *polyHead1, Node *polyHead2){        // 다항식 덧셈 함�
     while(polyHead2){
         ptrNode2 = polyHead2->next;
         polyHead2->next = NULL;
-        
+
         if(!resultHead){                    // result 다항식이 NULL이면
-                resultHead = polyHead2;     // result헤드, 1다항식헤드를 가리킴
-                ptrRes = resultHead;        // result에 대한 포인터 연결
-            }
+            resultHead = polyHead2;     // result헤드, 1다항식헤드를 가리킴
+            ptrRes = resultHead;        // result에 대한 포인터 연결
+        }
         else{                           // result 다항식이 NULL이 아니면
             ptrRes->next = polyHead2;   // result포인터, 다음 노드에 1다항식헤드 연결
             ptrRes = ptrRes->next;      // result포인터, 다음 노드로 이동
@@ -192,4 +174,23 @@ Node *addPoly(Node *polyHead1, Node *polyHead2){        // 다항식 덧셈 함�
 
     return resultHead;                  // 합한 다항식헤드 리턴
 }
-
+void printPoly(Node *headNode){
+    Node *ptrNode = headNode;
+    while(ptrNode){
+        printf(" %d %d", ptrNode->coef, ptrNode->exp);
+        ptrNode = ptrNode->next;
+    }
+    printf("\n");
+}
+void freePoly(Node *headNode){                          // 메모리 해제 함수
+    Node *current, *next;
+    current = headNode;
+    next = current->next;
+    while(1){
+        free(current);
+        current = next;
+        if(current == NULL)             // current가 NULL이면 함수 종료 
+            return;      
+        next = current->next;
+    }
+}
