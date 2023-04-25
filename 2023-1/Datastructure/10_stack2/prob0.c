@@ -7,23 +7,34 @@ typedef struct __stack{
     char *stackArr;
 }Stack;
 
+void init(Stack *pstack, char str[]);
+void convert(Stack *pstack, char str[], char answer[]);
 void push(Stack *pstack, char operand);
 char pop(Stack *pstack);
 char top(Stack *pstack);
 int isEmpty(Stack *pstack);
-
 void printStack(Stack *pstack);
 
 int main()
 {
     Stack stack;
     char str[] = "a - b - c + (d + e * f) / g";
+    char answer[strlen(str) + 1];
     int i = 0, j = 0;
 
-    char answer[strlen(str)+1];
+    init(&stack, str);                      // stack 구조체 초기화
+    convert(&stack, str, answer);           // 후위수식 변환
+    printf("%s\n", answer);                 // output
+    free(stack.stackArr);                   // 메모리 해제
 
-    stack.top = -1;
-    stack.stackArr = (char *)malloc(strlen(str)+1);
+    return 0;
+}
+void init(Stack *pstack, char str[]){
+    pstack->top = -1;
+    pstack->stackArr = (char *)malloc(strlen(str)+1);
+}
+void convert(Stack *pstack, char str[], char answer[]){
+    int i = 0, j = 0;
 
     while(str[i]){
         if(str[i] == ' '){
@@ -32,60 +43,59 @@ int main()
         }
 
         if(str[i] == '+' || str[i] == '-'){                 // operator
-            if(isEmpty(&stack) || top(&stack) == '(')
-                push(&stack, str[i]);
+            if(isEmpty(pstack) || top(pstack) == '(')
+                push(pstack, str[i]);
             else{
                 while(1){
-                    answer[j++] = pop(&stack);
-                    if(isEmpty(&stack) || top(&stack) == '(')
+                    answer[j++] = pop(pstack);
+                    if(isEmpty(pstack) || top(pstack) == '(')
                         break;
 
                 }
-                push(&stack, str[i]);
+                push(pstack, str[i]);
             }
         }
         else if(str[i] == '*' || str[i] == '/'){
-            if(top(&stack) == '+' || top(&stack) == '-' || top(&stack) == '('){
-                push(&stack, str[i]);
+            if(top(pstack) == '+' || top(pstack) == '-' || top(pstack) == '('){
+                push(pstack, str[i]);
             }
-            else if(isEmpty(&stack))
-                push(&stack, str[i]);
+            else if(isEmpty(pstack))
+                push(pstack, str[i]);
             else{
-                answer[j++] = pop(&stack);
-                push(&stack, str[i]);
+                answer[j++] = pop(pstack);
+                push(pstack, str[i]);
             }
         }
         else{                                       
             if(str[i] == '('){
-                push(&stack, str[i]);
+                push(pstack, str[i]);
             }
             else if(str[i] == ')'){
-                while(top(&stack) != '('){
-                    answer[j++] = pop(&stack);
+                while(top(pstack) != '('){
+                    answer[j++] = pop(pstack);
                 }
-                pop(&stack);
+                pop(pstack);
             }
             else{                                           // operand
                 answer[j++] = str[i];
             }
         }
 
-        //DEBUG
+        // DEBUG
         // printf("=== current ===\n");
         // printf("%s\n", answer);
-        // printStack(&stack);
+        // printStack(pstack);
         i++;
     }
-    while(!isEmpty(&stack)){
-        answer[j++] = pop(&stack);
+    while(!isEmpty(pstack)){
+        answer[j++] = pop(pstack);
     }
 
-    answer[j] = 0;
-    printf("%s\n", answer);
+    answer[j] = '\0';;
 
-    free(stack.stackArr);
-
-    return 0;
+    //DEBUG
+    // printf("=== complete ===\n");
+    // printf("%s\n\n\n",answer);
 }
 void push(Stack *pstack, char operand){
     pstack->stackArr[++pstack->top] = operand;
