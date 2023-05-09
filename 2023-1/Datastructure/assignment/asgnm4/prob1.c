@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-typedef struct __stack{
+typedef struct __stack{         //stack 구조체
     int top;
-    char stackArr[101][3];
+    char stackArr[101][3];      //stack을 문자열 형태로. 두 자릿수 피연산자를 위해.
 }Stack;
 
 void init(Stack *pstack);
@@ -26,17 +26,18 @@ int main()
     scanf("%d", &calNum);
     getchar();
     for(i=0; i<calNum; i++){
-        scanf("%s", infix);
-        convert(infix, postfix);
-        printf("%s\n", postfix);
+        scanf("%s", infix);         //중위표기식 입력
+        convert(infix, postfix);    //변환
+        //debug
+        printf("%s\n", postfix);    //후위표기식 출력
         // printf("%d\n", operate(postfix));
     }
     return 0;
 }
-void init(Stack *pstack){
+void init(Stack *pstack){   //스택 초기화 함수
     pstack->top = -1;
 }
-void convert(char infix[], char postfix[]){
+void convert(char infix[], char postfix[]){     // 후위표기식 변환 함수
     Stack stack;
     init(&stack);
 
@@ -69,9 +70,9 @@ void convert(char infix[], char postfix[]){
                 strcpy(tmp[j++], pop(&stack));
             pop(&stack);
         }
-        else{                               // operator
+        else{                                               //연산자. +, -, *, /, ^
             while(!isEmpty(&stack) && getPriority(c) <= getPriority(top(&stack))){
-                if(getPriority(top(&stack)) == 3)
+                if(getPriority(top(&stack)) == 3)   //stack의 top이 ^라면 ^가 들어오더라도 stack에 넣어야함
                     break;
                 else
                     strcpy(tmp[j++], pop(&stack));
@@ -79,6 +80,7 @@ void convert(char infix[], char postfix[]){
             push(&stack, c);
         }
         i++;
+        //Debug
         for(int k=0; k<j; k++)
             printf(" %s",tmp[k]);
         printf("\n");
@@ -86,31 +88,31 @@ void convert(char infix[], char postfix[]){
     while(!isEmpty(&stack))
         strcpy(tmp[j++], pop(&stack));
 
-    strcpy(postfix, tmp[0]);
+    strcpy(postfix, tmp[0]);        //첫 문자열 strcpy
     for(i=1; i<j; i++){
-        strcat(postfix, " ");
-        strcat(postfix, tmp[i]);
+        strcat(postfix, " ");   //두 자릿수 피연산자 구분 위해 공백 삽입
+        strcat(postfix, tmp[i]);    //두 번째부터 strcat
     }
 }
 // int operate(char postfix[]){
 //     return 0;
 // }
-void push(Stack *pstack, char operand[]){
+void push(Stack *pstack, char operand[]){   //스택 푸쉬 함수
     strcpy(pstack->stackArr[++pstack->top], operand);
 }
-char *pop(Stack *pstack){
+char *pop(Stack *pstack){                   //스택 팝 함수
     return pstack->stackArr[pstack->top--];
 }
-char *top(Stack *pstack){
+char *top(Stack *pstack){                   //스택 top 확인 함수
     return pstack->stackArr[pstack->top];
 }
-int isEmpty(Stack *pstack){
+int isEmpty(Stack *pstack){                 //스택 empty 확인 함수
     if(pstack->top < 0)
         return 1;
     else    
         return 0;
 }
-int getPriority(char c[]){
+int getPriority(char c[]){                  //연산자 우선순위 함수
     if(!strcmp(c, "^"))
         return 3;
     else if(!strcmp(c, "*") || !strcmp(c, "/"))
