@@ -5,32 +5,39 @@
 
 typedef struct __stack{         //stack 구조체
     int top;
-    char stackArr[101][3];      //stack을 문자열 형태로. 두 자릿수 피연산자를 위해.
+    char stackArr[201][3];      //stack을 문자열 형태로. 두 자릿수 피연산자를 위해.
+    int stackForOp[200];
 }Stack;
 
 void init(Stack *pstack);
 void convert(char infix[], char postfix[]);
-// int operate(char postfix[]);
+int operate(char postfix[]);
 void push(Stack *pstack, char operand[]);
 char *pop(Stack *pstack);
 char *top(Stack *pstack);
 int isEmpty(Stack *pstack);
 int getPriority(char c[]);
 
+void push2(Stack *pstack, int num);
+int pop2(Stack *pstack);
+int doOp(int secondPop, int firstPop, char operate);
+
 int main()
 {
-    char infix[201];
-    char postfix[401];
-    int i, calNum;
+    char infix[201], *postfix = NULL;   //중위 표기식, 후위 표기식
+    int i, N;
 
-    scanf("%d", &calNum);
+    scanf("%d", &N);
     getchar();
-    for(i=0; i<calNum; i++){
-        scanf("%s", infix);         //중위표기식 입력
+    for(i=0; i<N; i++){
+        scanf("%s", infix);                                 //중위표기식 입력
+        postfix = (char *)malloc(strlen(infix)*2 +1);       //후위표기식 메모리 할당
         convert(infix, postfix);    //변환
-        //debug
-        printf("%s\n", postfix);    //후위표기식 출력
-        // printf("%d\n", operate(postfix));
+
+        int ret = operate(postfix); //연산
+        printf("%d\n", ret);        //연산 결과 출력
+
+        free(postfix);              //메모리 해제
     }
     return 0;
 }
@@ -41,7 +48,7 @@ void convert(char infix[], char postfix[]){     // 후위표기식 변환 함수
     Stack stack;
     init(&stack);
 
-    char tmp[201][3];
+    char tmp[201][3];   //후위표기식 변환하기 전 저장할 임시 버퍼
     int i = 0, j = 0;
 
     while(infix[i]){
@@ -72,38 +79,62 @@ void convert(char infix[], char postfix[]){     // 후위표기식 변환 함수
         }
         else{                                               //연산자. +, -, *, /, ^
             while(!isEmpty(&stack) && getPriority(c) <= getPriority(top(&stack))){
-                if(getPriority(top(&stack)) == 3)   //stack의 top이 ^라면 ^가 들어오더라도 stack에 넣어야함
+                if(getPriority(c) == 3){   //stack의 top이 ^라면 ^가 들어오더라도 stack에 넣어야함
                     break;
+                }
                 else
                     strcpy(tmp[j++], pop(&stack));
             }
             push(&stack, c);
         }
         i++;
-        //Debug
-        for(int k=0; k<j; k++)
-            printf(" %s",tmp[k]);
-        printf("\n");
     }
     while(!isEmpty(&stack))
         strcpy(tmp[j++], pop(&stack));
 
     strcpy(postfix, tmp[0]);        //첫 문자열 strcpy
     for(i=1; i<j; i++){
-        strcat(postfix, " ");   //두 자릿수 피연산자 구분 위해 공백 삽입
+        strcat(postfix, " ");       //두 자릿수 피연산자 구분 위해 공백 삽입
         strcat(postfix, tmp[i]);    //두 번째부터 strcat
     }
 }
-// int operate(char postfix[]){
-//     return 0;
-// }
-void push(Stack *pstack, char operand[]){   //스택 푸쉬 함수
+int operate(char postfix[]){            //후위표기식 계산 함수
+    Stack stack;
+    init(&stack);
+
+    char c[3];
+    int i;
+    for(i=0; i<strlen(postfix); i += 2){    // 연산자, 피연산자 사이 공백으로 인해 인덱스 2칸씩 점프
+        if(postfix[i] >= '0' && postfix[i] <= '9'){             //피연산자일 경우 c정의
+            if(postfix[i+1] >= '0' && postfix[i+1] <= '9'){
+                c[0] = postfix[i++];
+                c[1] = postfix[i];
+                c[2] = '\0';
+            }
+            else{                                      
+                c[0] = postfix[i];
+                c[1] = '\0';
+            }
+
+            int tmp = atoi(c);
+            push2(&stack, tmp);
+        }
+        else{                               //연산자일 경우
+            int firstPop = pop2(&stack);
+            int secondPop = pop2(&stack);
+            push2(&stack, doOp(secondPop, firstPop, postfix[i]));   //연산 결과를 푸시
+        }
+    }
+
+    return pop2(&stack);    //while문 다 돌고 나서 스택에 남아 있는 마지막 값 리턴
+}
+void push(Stack *pstack, char operand[]){   //변환 스택 푸시 함수
     strcpy(pstack->stackArr[++pstack->top], operand);
 }
-char *pop(Stack *pstack){                   //스택 팝 함수
+char *pop(Stack *pstack){                   //변환 스택 팝 함수
     return pstack->stackArr[pstack->top--];
 }
-char *top(Stack *pstack){                   //스택 top 확인 함수
+char *top(Stack *pstack){                   //변환 스택 top 확인 함수
     return pstack->stackArr[pstack->top];
 }
 int isEmpty(Stack *pstack){                 //스택 empty 확인 함수
@@ -120,5 +151,25 @@ int getPriority(char c[]){                  //연산자 우선순위 함수
     else if(!strcmp(c, "+") || !strcmp(c, "-"))
         return 1;
     
+    return 0;
+}
+void push2(Stack *pstack, int num){         //연산 스택 푸시 함수
+    pstack->stackForOp[++pstack->top] = num;
+}
+int pop2(Stack *pstack){                    //연산 스택 팝 함수
+    return pstack->stackForOp[pstack->top--];
+}
+int doOp(int secondPop, int firstPop, char operate){    //연산 함수
+    if(operate == '^')
+        return (int)pow(secondPop, firstPop);
+    else if(operate == '*')
+        return secondPop*firstPop;
+    else if(operate == '/')
+        return secondPop/firstPop;
+    else if(operate == '+')
+        return secondPop+firstPop;
+    else if(operate == '-')
+        return secondPop-firstPop;
+
     return 0;
 }
