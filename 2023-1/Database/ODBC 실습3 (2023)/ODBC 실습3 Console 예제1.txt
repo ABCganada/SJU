@@ -1,0 +1,29 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[101];
+
+		char deptNameOld[31], deptNameNew[31];
+		printf("Enter the old DEPARTMENT name: ");
+		scanf_s("%s", deptNameOld);
+		printf("Enter the new DEPARTMENT name: ");
+		scanf_s("%s", deptNameNew);
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char *)query, 101, "UPDATE DEPARTMENT SET DEPTNAME = '%s' WHERE DEPTNAME = '%s'", deptNameNew, deptNameOld);
+			SQLExecDirect(hStmt, query, SQL_NTS);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}

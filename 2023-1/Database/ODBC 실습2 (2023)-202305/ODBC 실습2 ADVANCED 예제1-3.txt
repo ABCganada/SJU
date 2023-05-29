@@ -1,0 +1,32 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[101];
+
+		int deptNo, floor;
+		char deptName[31];
+		printf("Enter a DEPARTMENT number: ");
+		scanf_s("%d", &deptNo);
+		printf("Enter a DEPARTMENT name: ");
+		scanf_s("%s", deptName);
+		printf("Enter a DEPARTMENT floor: ");
+		scanf_s("%d", &floor);
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char *)query, 101, "INSERT INTO DEPARTMENT VALUES(%d,'%s',%d)", deptNo, deptName, floor);
+			SQLExecDirect(hStmt, query, SQL_NTS);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}

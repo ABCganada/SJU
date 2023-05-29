@@ -1,0 +1,33 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[101];
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char *)query, 101, "INSERT INTO EMPLOYEE VALUES(1365, 'T.HWANG', 'STAFF', 3426, 3500000, 3)");
+			if (SQLExecDirect(hStmt, query, SQL_NTS) == SQL_ERROR)
+			{
+				SQLCHAR buffer[SQL_MAX_MESSAGE_LENGTH + 1];
+				SQLCHAR sqlstate[SQL_SQLSTATE_SIZE + 1];
+				SQLINTEGER sqlcode;
+				SQLSMALLINT length;
+				SQLError(hEnv, hDbc, hStmt, sqlstate, &sqlcode, buffer, SQL_MAX_MESSAGE_LENGTH + 1, &length);
+				printf("SQLSTATE %s\n", sqlstate);
+				printf("Native error code:%ld\n", sqlcode);
+				printf("%s\n\n", buffer);
+			}
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}

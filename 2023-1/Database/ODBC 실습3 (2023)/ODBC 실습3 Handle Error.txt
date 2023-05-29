@@ -1,0 +1,30 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[101];
+		SQLRETURN retCode;
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char *)query, 101, "SELECT * FROM DEPARTMEMT");
+			retCode = SQLExecDirect(hStmt, query, SQL_NTS);
+
+			if (retCode == SQL_ERROR || retCode == SQL_NO_DATA_FOUND)
+			{
+				printf("Query execution error!\n");
+				return -1;
+			}
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}

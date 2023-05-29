@@ -1,0 +1,42 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[101];
+
+		SQLSMALLINT colCount = -1;	// number of columns
+		SQLCHAR data[50][31];		// 2d array for results
+		SQLINTEGER nullData[50];	// array for null results
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char *)query, 101, "SELECT * FROM EMPLOYEE");
+			SQLExecDirect(hStmt, query, SQL_NTS);
+
+			SQLNumResultCols(hStmt, &colCount);
+			for (int i = 0; i < colCount; ++i)
+			{
+				SQLBindCol(hStmt, i + 1, SQL_C_CHAR, data[i], sizeof(data[i]), (SQLLEN *)&nullData[i]);
+			}
+			while (SQLFetch(hStmt) != SQL_NO_DATA)
+			{
+				for (int i = 0; i < colCount; ++i)
+				{
+					if (nullData[i] == SQL_NULL_DATA) printf("NULL      ");
+					else printf("%-10s", data[i]);
+				}
+				printf("\n");
+			}
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}
