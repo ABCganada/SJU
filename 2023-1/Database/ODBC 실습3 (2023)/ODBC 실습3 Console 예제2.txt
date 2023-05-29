@@ -1,0 +1,27 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[101];
+
+		int empNo;
+		printf("Enter an EMPLOYEE number: ");
+		scanf_s("%d", &empNo);
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char *)query, 101, "DELETE FROM EMPLOYEE WHERE EMPNO = %d", empNo);
+			SQLExecDirect(hStmt, query, SQL_NTS);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}

@@ -1,0 +1,25 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[201];
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+            sprintf_s((char *)query, 201, "DELETE PROJECT FROM EMPLOYEE AS E WHERE "
+                      "E.EMPNO = PROJECT.EMPNO AND E.TITLE <> 'ASSISTANT MANAGER' AND PROJECT.TAKE_TIME < 10");
+
+			SQLExecDirect(hStmt, query, SQL_NTS);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}

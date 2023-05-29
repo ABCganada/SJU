@@ -1,0 +1,44 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[101];
+
+		SQLSMALLINT numCols = -1;// number of columns
+		SQLCHAR columnName[50][31];
+		SQLSMALLINT columnNameLen[50];
+		SQLSMALLINT columnDataType[50];
+		SQLULEN columnDataSize[50];
+		SQLSMALLINT columnDataDecimalDigits[50];
+		SQLSMALLINT columnDataNullable[50];
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char *)query, 101, "SELECT * FROM DEPARTMENT");
+			SQLExecDirect(hStmt, query, SQL_NTS);
+
+			SQLNumResultCols(hStmt, &numCols);
+			for (int i = 0; i < numCols; ++i)
+			{
+				SQLDescribeCol(hStmt, i + 1, columnName[i], 30, &columnNameLen[i], &columnDataType[i],
+							   &columnDataSize[i], &columnDataDecimalDigits[i], &columnDataNullable[i]);
+
+				printf("\nColumn #%d\n", i + 1);
+                printf("\tName: %s\n\tName length: %d\n\tData type: %s\n\tData size: %d\n"
+                       "\tData decimal digits: %d\n\tData nullable: %d\n",
+                       columnName[i], columnNameLen[i], get_data_type_in_string(columnDataType[i]),
+                       columnDataSize[i], columnDataDecimalDigits[i], columnDataNullable[i]);
+			}
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}
