@@ -1,0 +1,31 @@
+int main(int argc, char *argv[])
+{
+	if (db_connect())
+	{
+		printf("Connected to %s!\n\n", dataSourceName);
+
+		SQLHSTMT hStmt;	// Statement Handle
+		SQLCHAR query[101];
+
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char *)query, 101, "SELECT * FROM DEPARTMENT");
+			SQLExecDirect(hStmt, query, SQL_NTS);
+
+			SQLCHAR empName[11];
+			SQLBindCol(hStmt, 1, SQL_C_CHAR, empName, 11, NULL);
+
+			while (SQLFetch(hStmt) != SQL_NO_DATA)
+			{
+				printf("%s\n", empName);
+			}
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+		}
+
+		db_disconnect();
+	}
+
+	return 0;
+}
