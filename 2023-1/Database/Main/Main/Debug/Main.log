@@ -1,2 +1,22 @@
 ﻿  CCustom.cpp
+  CDelete.cpp
+  CDeleteTap1.cpp
+  CDeleteTap2.cpp
+  CDeleteTap3.cpp
+  CInput1.cpp
+  CInsert.cpp
+  CInsertTap1.cpp
+  CInsertTap2.cpp
+  CInsertTap3.cpp
+  CInsertTap4.cpp
+  CSchema.cpp
+  CSelect.cpp
+  CUpdate.cpp
+  CUpdateTap1.cpp
+  CUpdateTap2.cpp
+  CUpdateTap3.cpp
+  CUpdateTap4.cpp
+  Main.cpp
+  MainDlg.cpp
+  코드를 생성하고 있습니다...
   Main.vcxproj -> C:\Users\신민기\Desktop\SJU\2023-1\Database\Main\Debug\Main.exe
