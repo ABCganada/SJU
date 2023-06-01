@@ -98,6 +98,8 @@ void CUpdateTap3::OnBnClickedButton2()
 
 		strSQL2.Format(_T("update driver set total_packs = total_packs + packs; "));
 		db.ExecuteSQL(strSQL2);
+
+		AfxMessageBox(_T("변경 완료"));
 	}
 	else {
 		AfxMessageBox(_T("DB 연결 실패"));

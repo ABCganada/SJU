@@ -161,3 +161,15 @@ SELECT id, name, CASE
   END AS Salary
 FROM driver
 order by name;
+-------------------------
+SELECT *
+FROM car
+WHERE id NOT IN (
+  SELECT carno
+  FROM driver
+);
+-------------------------
+select customer.id, SUM(package.charge) as total_charge
+from customer, package
+where customer.id = package.customer_id
+group by customer.id;

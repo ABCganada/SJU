@@ -233,7 +233,7 @@ void CSelect::OnBnClickedButton4()
 void CSelect::OnBnClickedButton5()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	AfxMessageBox(_T("Driver 리스트를 이름 순으로 정렬하고, 총 패키지 개수와 Salary를 확인합니다."));
+	AfxMessageBox(_T("Driver 리스트를 배달 개수의 내림차순으로 정렬하고, 총 패키지 개수와 Salary를 확인합니다."));
 
 	m_dataList.ResetContent();
 
@@ -243,7 +243,7 @@ void CSelect::OnBnClickedButton5()
 	if (bRet) {
 
 		CRecordset rs(&db);
-		rs.Open(CRecordset::forwardOnly, _T("SELECT id, name, total_packs, CASE WHEN total_packs >= 3 THEN 2500000 + (15000 * total_packs) ELSE 2500000 END AS Salary FROM driver order by name; "));
+		rs.Open(CRecordset::forwardOnly, _T("SELECT id, name, total_packs, CASE WHEN total_packs >= 3 THEN 2500000 + (15000 * total_packs) ELSE 2500000 END AS Salary FROM driver order by total_packs desc; "));
 
 		CString id, name1, total_packs, salary;
 

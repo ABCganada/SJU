@@ -189,6 +189,7 @@
     <ClInclude Include="CDeleteTap1.h" />
     <ClInclude Include="CDeleteTap2.h" />
     <ClInclude Include="CDeleteTap3.h" />
+    <ClInclude Include="CDeleteTap4.h" />
     <ClInclude Include="CInput1.h" />
     <ClInclude Include="CInsert.h" />
     <ClInclude Include="CInsertTap1.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="CDeleteTap1.cpp" />
     <ClCompile Include="CDeleteTap2.cpp" />
     <ClCompile Include="CDeleteTap3.cpp" />
+    <ClCompile Include="CDeleteTap4.cpp" />
     <ClCompile Include="CInput1.cpp" />
     <ClCompile Include="CInsert.cpp" />
     <ClCompile Include="CInsertTap1.cpp" />

@@ -87,6 +87,9 @@
     <ClInclude Include="CDeleteTap3.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="CDeleteTap4.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -150,6 +153,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CDeleteTap3.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CDeleteTap4.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

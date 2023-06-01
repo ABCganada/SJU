@@ -101,6 +101,8 @@ void CUpdateTap1::OnBnClickedButton3()
 		strSQL.Format(_T("update package set status = 1 where customer_id = '%s' and pno = '%s';"), str1, str2);
 
 		db.ExecuteSQL(strSQL);
+
+		AfxMessageBox(_T("변경 완료"));
 	}
 	else {
 		AfxMessageBox(_T("DB 연결 실패"));

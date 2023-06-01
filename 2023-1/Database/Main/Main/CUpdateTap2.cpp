@@ -99,6 +99,8 @@ void CUpdateTap2::OnBnClickedButton2()
 		strSQL.Format(_T("update package set charge = charge + 1000 where customer_id in (select id from customer where address = 'jeju')"));
 
 		db.ExecuteSQL(strSQL);
+
+		AfxMessageBox(_T("변경 완료"));
 	}
 	else {
 		AfxMessageBox(_T("DB 연결 실패"));
