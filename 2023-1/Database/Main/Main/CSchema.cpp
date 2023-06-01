@@ -74,7 +74,7 @@ void CSchema::OnBnClickedReadBtn()
 
 			// 리스트 박스에 데이터 추가
 			CString data;
-			data.Format(_T("%s, %s, %s, %s, %s"), name, address, phone_no, email, dno);
+			data.Format(_T("%s    %s    %s    %s    %s"), name, address, phone_no, email, dno);
 			m_dataList.InsertString(index,data);
 
 			index++;
@@ -121,7 +121,7 @@ void CSchema::OnBnClickedReadBtn2()
 
 			// Construct a string with the retrieved data
 			CString data;
-			data.Format(_T("%s, %s, %s, %s"),
+			data.Format(_T("%s    %s    %s    %s"),
 				customer_id, pno, weight, status);
 
 			// Insert the string at the specified index
@@ -175,7 +175,7 @@ void CSchema::OnBnClickedReadBtn3()
 
 			// Construct a string with the retrieved data
 			CString data;
-			data.Format(_T("%s, %s, %s, %s, %s, %s"),
+			data.Format(_T("%s    %s    %s    %s    %s    %s"),
 				id, name, phone_no, packs, total_packs, carno);
 
 			// Add the string to the data list box
@@ -225,7 +225,7 @@ void CSchema::OnBnClickedReadBtn4()
 
 			// Construct a string with the retrieved data
 			CString data;
-			data.Format(_T("%s, %s, %s, %s"),
+			data.Format(_T("%s    %s    %s    %s"),
 				id, capa_w, capa_n, bno);
 
 			// Add the string to the data list box
@@ -274,7 +274,7 @@ void CSchema::OnBnClickedReadBtn5()
 
 			// Construct a string with the retrieved data
 			CString data;
-			data.Format(_T("%s, %s, %s, %s"),
+			data.Format(_T("%s    %s    %s    %s"),
 				id, name, phone_no, manager);
 
 			// Add the string to the data list box

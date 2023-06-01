@@ -102,6 +102,8 @@ void CDeleteTap2::OnBnClickedButton2()
 		strSQL.Format(_T("delete from package where customer_id = '%s' and pno = '%s';"), str, str2);
 
 		db.ExecuteSQL(strSQL);
+
+		AfxMessageBox(_T("삭제 완료"));
 	}
 	else {
 		AfxMessageBox(_T("DB 연결 실패"));

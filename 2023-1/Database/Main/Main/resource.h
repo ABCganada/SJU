@@ -18,6 +18,12 @@
 #define UpdateTap1                      150
 #define UpdateTap2                      152
 #define CustomPage                      154
+#define InsertTap3                      156
+#define InsertTap4                      158
+#define UpdateTap3                      160
+#define UpdateTap4                      162
+#define DeleteTap3                      164
+#define DeleteTap4                      166
 #define main_button1                    1000
 #define IDC_DATA_LIST                   1001
 #define IDC_READ_BTN                    1002
@@ -41,14 +47,18 @@
 #define Update_Btn                      1022
 #define IDC_LIST2                       1023
 #define Custom_Btn                      1024
+#define IDC_BUTTON4                     1025
+#define IDC_BUTTON5                     1026
+#define IDC_EDIT6                       1027
+#define IDC_EDIT7                       1028
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        156
+#define _APS_NEXT_RESOURCE_VALUE        168
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1025
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

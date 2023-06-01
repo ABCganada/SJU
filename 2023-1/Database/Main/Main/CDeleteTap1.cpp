@@ -95,6 +95,8 @@ void CDeleteTap1::OnBnClickedButton1()
 		strSQL.Format(_T("delete from driver where id = '%s';"), str);
 
 		db.ExecuteSQL(strSQL);
+
+		AfxMessageBox(_T("삭제 완료"));
 	}
 	else {
 		AfxMessageBox(_T("DB 연결 실패"));
