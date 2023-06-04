@@ -155,7 +155,7 @@ void CSelect::OnBnClickedButton3()
 			CString branch_no;
 
 			// Add the header string to the data list box at the top
-			m_dataList.InsertString(0, _T("Customer Name / Branch No"));
+			m_dataList.InsertString(0, _T("Driver Name / Branch No"));
 			m_dataList.InsertString(1, _T(""));
 
 			int index = 2; // Start index for inserting data strings
