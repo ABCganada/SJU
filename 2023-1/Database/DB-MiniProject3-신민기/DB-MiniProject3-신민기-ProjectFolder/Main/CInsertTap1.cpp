@@ -43,10 +43,10 @@ END_MESSAGE_MAP()
 void CInsertTap1::OnBnClickedOk()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_input1.GetWindowTextW(m_inputText1);
-	m_input2.GetWindowTextW(m_inputText2);
-	m_input3.GetWindowTextW(m_inputText3);
-	m_input4.GetWindowTextW(m_inputText4);
-	m_input5.GetWindowTextW(m_inputText5);
+	m_input1.GetWindowText(m_inputText1);
+	m_input2.GetWindowText(m_inputText2);
+	m_input3.GetWindowText(m_inputText3);
+	m_input4.GetWindowText(m_inputText4);
+	m_input5.GetWindowText(m_inputText5);
 	CDialogEx::OnOK();
 }

@@ -155,7 +155,7 @@ void CSelect::OnBnClickedButton3()
 			CString branch_no;
 
 			// Add the header string to the data list box at the top
-			m_dataList.InsertString(0, _T("Customer Name / Branch No"));
+			m_dataList.InsertString(0, _T("Driver Name / Branch No"));
 			m_dataList.InsertString(1, _T(""));
 
 			int index = 2; // Start index for inserting data strings
@@ -211,6 +211,12 @@ void CSelect::OnBnClickedButton4()
 			rs.GetFieldValue((short)1, name1);
 			rs.GetFieldValue((short)2, id2);
 			rs.GetFieldValue((short)3, name2);
+
+			// NULL 값인 경우 "NULL"로 출력
+			if (id2.IsEmpty() && name2.IsEmpty()) {
+				id2 = _T("NULL");
+				name2 = _T("NULL");
+			}
 
 			// 리스트 박스에 데이터 추가
 			CString data;

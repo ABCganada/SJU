@@ -89,9 +89,9 @@ void CDeleteTap2::OnBnClickedButton1()
 void CDeleteTap2::OnBnClickedButton2()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_input.GetWindowTextW(m_inputText);
+	m_input.GetWindowText(m_inputText);
 	CString str = m_inputText;
-	m_input2.GetWindowTextW(m_inputText2);
+	m_input2.GetWindowText(m_inputText2);
 	CString str2 = m_inputText2;
 
 	CDatabase db;

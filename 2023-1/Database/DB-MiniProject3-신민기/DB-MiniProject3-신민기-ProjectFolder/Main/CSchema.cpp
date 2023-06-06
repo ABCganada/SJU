@@ -35,51 +35,179 @@ BEGIN_MESSAGE_MAP(CSchema, CDialog)
 	ON_BN_CLICKED(IDC_READ_BTN3, &CSchema::OnBnClickedReadBtn3)
 	ON_BN_CLICKED(IDC_READ_BTN4, &CSchema::OnBnClickedReadBtn4)
 	ON_BN_CLICKED(IDC_READ_BTN5, &CSchema::OnBnClickedReadBtn5)
+	ON_LBN_SELCHANGE(IDC_DATA_LIST, &CSchema::OnLbnSelchangeDataList)
 END_MESSAGE_MAP()
 
+const char* get_data_type_in_string(SQLSMALLINT dataType)
+{
+	switch (dataType)
+	{
+	case SQL_CHAR:
+		return "CHAR";
+		break;
+	case SQL_VARCHAR:
+		return "VARCHAR";
+		break;
+	case SQL_LONGVARCHAR:
+		return "LONGVARCHAR";
+		break;
+	case SQL_WCHAR:
+		return "WCHAR";
+		break;
+	case SQL_WVARCHAR:
+		return "WVARCHAR";
+		break;
+	case SQL_WLONGVARCHAR:
+		return "WLONGVARCHAR";
+		break;
+	case SQL_NUMERIC:
+		return "NUMERIC";
+		break;
+	case SQL_SMALLINT:
+		return "SMALLINT";
+		break;
+	case SQL_INTEGER:
+		return "INTEGER";
+		break;
+	case SQL_REAL:
+		return "REAL";
+		break;
+	case SQL_FLOAT:
+		return "FLOAT";
+		break;
+	case SQL_DOUBLE:
+		return "DOUBLE";
+		break;
+	case SQL_BIT:
+		return "BIT";
+		break;
+	case SQL_TINYINT:
+		return "TINYINT";
+		break;
+	case SQL_BIGINT:
+		return "BIGINT";
+		break;
+	case SQL_BINARY:
+		return "BINARY";
+		break;
+	case SQL_VARBINARY:
+		return "VARBINARY";
+		break;
+	case SQL_LONGVARBINARY:
+		return "LONGVARBINARY";
+		break;
+	case SQL_TYPE_DATE:
+		return "TYPE_DATE";
+		break;
+	case SQL_TYPE_TIME:
+		return "TYPE_TIME";
+		break;
+	case SQL_TYPE_TIMESTAMP:
+		return "TYPE_TIMESTAMP";
+		break;
+	case SQL_INTERVAL_MONTH:
+		return "INTERVAL_MONTH";
+		break;
+	case SQL_INTERVAL_YEAR:
+		return "INTERVAL_YEAR";
+		break;
+	case SQL_INTERVAL_YEAR_TO_MONTH:
+		return "INTERVAL_YEAR_TO_MONTH";
+		break;
+	case SQL_INTERVAL_DAY:
+		return "INTERVAL_DAY";
+		break;
+	case SQL_INTERVAL_HOUR:
+		return "INTERVAL_HOUR";
+		break;
+	case SQL_INTERVAL_MINUTE:
+		return "INTERVAL_MINUTE";
+		break;
+	case SQL_INTERVAL_SECOND:
+		return "INTERVAL_SECOND";
+		break;
+	case SQL_INTERVAL_DAY_TO_HOUR:
+		return "INTERVAL_DAY_TO_HOUR";
+		break;
+	case SQL_INTERVAL_DAY_TO_MINUTE:
+		return "INTERVAL_DAY_TO_MINUTE";
+		break;
+	case SQL_INTERVAL_DAY_TO_SECOND:
+		return "INTERVAL_DAY_TO_SECOND";
+		break;
+	case SQL_INTERVAL_HOUR_TO_MINUTE:
+		return "INTERVAL_HOUR_TO_MINUTE";
+		break;
+	case SQL_INTERVAL_HOUR_TO_SECOND:
+		return "INTERVAL_HOUR_TO_SECOND";
+		break;
+	case SQL_INTERVAL_MINUTE_TO_SECOND:
+		return "INTERVAL_MINUTE_TO_SECOND";
+		break;
+	case SQL_GUID:
+		return "GUID";
+		break;
+	default:
+		return "UNKNOWN";
+	}
+}
 
 // CSchema 메시지 처리기
 
 void CSchema::OnBnClickedReadBtn()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	// TODO: Add control notification handler code here
 	m_dataList.ResetContent();
 
 	CDatabase db;
 	BOOL bRet = db.OpenEx(_T("DSN=DB02_Server; uid=KIM; PWD=aaaa;"), 0);
-
 	if (bRet) {
+		SQLHDBC hDbc = db.m_hdbc;
 
-		CRecordset rs(&db);
-		rs.Open(CRecordset::forwardOnly, _T("select * from Customer"));
+		SQLHSTMT hStmt;
+		SQLCHAR query[101];
 
-		CString name;
-		CString address;
-		CString phone_no;
-		CString email;
-		CString dno;
+		SQLSMALLINT numCols = -1;
+		SQLCHAR columnName[50][31];
+		SQLSMALLINT columnNameLen[50];
+		SQLSMALLINT columnDataType[50];
+		SQLULEN columnDataSize[50];
+		SQLSMALLINT columnDataDecimalDigits[50];
+		SQLSMALLINT columnDataNullable[50];
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char*)query, 101, "select * from customer");
+			SQLExecDirect(hStmt, query, SQL_NTS);
 
-		// Add the header string to the data list box at the top
-		m_dataList.InsertString(0, _T("name / Address / Phone_no / email / Dno"));
-		m_dataList.InsertString(1, _T(""));
+			SQLNumResultCols(hStmt, &numCols);
+			for (int i = 0; i < numCols; ++i)
+			{
+				SQLDescribeCol(hStmt, i + 1, columnName[i], 30, &columnNameLen[i], &columnDataType[i],
+					&columnDataSize[i], &columnDataDecimalDigits[i], &columnDataNullable[i]);
 
-		int index = 2; // Start index for inserting data strings
+				CString nullableString;
+				if (columnDataNullable[i] == SQL_NULLABLE)
+					nullableString = _T("NULL");
+				else
+					nullableString = _T("Not NULL");
 
-		while (!rs.IsEOF()) {
-			rs.GetFieldValue((short)1, name);
-			rs.GetFieldValue((short)2, address);
-			rs.GetFieldValue((short)3, phone_no);
-			rs.GetFieldValue((short)4, email);
-			rs.GetFieldValue((short)5, dno);
+				CString columnInfo;
+				columnInfo.Format(_T("#%d        %s        %d        %s        %d        %s\n"),
+					i + 1, columnName[i], columnNameLen[i], get_data_type_in_string(columnDataType[i]),
+					columnDataSize[i], nullableString);
 
-			// 리스트 박스에 데이터 추가
-			CString data;
-			data.Format(_T("%s    %s    %s    %s    %s"), name, address, phone_no, email, dno);
-			m_dataList.InsertString(index,data);
+				m_dataList.AddString(columnInfo);
+			}
 
-			index++;
+			CString columnInfo;
+			columnInfo.Format(_T(""));
+			m_dataList.InsertString(0, columnInfo);
 
-			rs.MoveNext();
+			columnInfo.Format(_T("Column # / Name / Length / Data type / Data size  / Nullable"));
+			m_dataList.InsertString(0, columnInfo);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
 		}
 	}
 	else {
@@ -90,6 +218,8 @@ void CSchema::OnBnClickedReadBtn()
 }
 
 
+
+
 void CSchema::OnBnClickedReadBtn2()
 {
 	// TODO: Add control notification handler code here
@@ -97,38 +227,53 @@ void CSchema::OnBnClickedReadBtn2()
 
 	CDatabase db;
 	BOOL bRet = db.OpenEx(_T("DSN=DB02_Server; uid=KIM; PWD=aaaa;"), 0);
-
 	if (bRet) {
-		CRecordset rs(&db);
-		rs.Open(CRecordset::forwardOnly, _T("SELECT * FROM package"));
+		SQLHDBC hDbc = db.m_hdbc;
 
-		CString customer_id;
-		CString pno;
-		CString weight;
-		CString status;
+		SQLHSTMT hStmt;
+		SQLCHAR query[101];
 
-		// Add the header string to the data list box at the top
-		m_dataList.InsertString(0, _T("Custmoer ID / Pno / Weight / Status"));
-		m_dataList.InsertString(1, _T(""));
+		SQLSMALLINT numCols = -1;
+		SQLCHAR columnName[50][31];
+		SQLSMALLINT columnNameLen[50];
+		SQLSMALLINT columnDataType[50];
+		SQLULEN columnDataSize[50];
+		SQLSMALLINT columnDataDecimalDigits[50];
+		SQLSMALLINT columnDataNullable[50];
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char*)query, 101, "select * from package");
+			SQLExecDirect(hStmt, query, SQL_NTS);
 
-		int index = 2; // Start index for inserting data strings
+			SQLNumResultCols(hStmt, &numCols);
+			for (int i = 0; i < numCols; ++i)
+			{
+				SQLDescribeCol(hStmt, i + 1, columnName[i], 30, &columnNameLen[i], &columnDataType[i],
+					&columnDataSize[i], &columnDataDecimalDigits[i], &columnDataNullable[i]);
 
-		while (!rs.IsEOF()) {
-			rs.GetFieldValue((short)0, customer_id);
-			rs.GetFieldValue((short)1, pno);
-			rs.GetFieldValue((short)2, weight);
-			rs.GetFieldValue((short)3, status);
+				CString nullableString;
+				if (columnDataNullable[i] == SQL_NULLABLE)
+					nullableString = _T("NULL");
+				else
+					nullableString = _T("Not NULL");
 
-			// Construct a string with the retrieved data
-			CString data;
-			data.Format(_T("%s    %s    %s    %s"),
-				customer_id, pno, weight, status);
+				CString columnInfo;
+				columnInfo.Format(_T("#%d        %s        %d        %s        %d        %s\n"),
+					i + 1, columnName[i], columnNameLen[i], get_data_type_in_string(columnDataType[i]),
+					columnDataSize[i], nullableString);
 
-			// Insert the string at the specified index
-			m_dataList.InsertString(index, data);
+				m_dataList.AddString(columnInfo);
+			}
 
-			index++; // Increment the index for the next string
-			rs.MoveNext();
+			CString columnInfo;
+			columnInfo.Format(_T(""));
+			m_dataList.InsertString(0, columnInfo);
+
+			columnInfo.Format(_T("Column # / Name / Length / Data type / Data size  / Nullable"));
+			m_dataList.InsertString(0, columnInfo);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
 		}
 	}
 	else {
@@ -148,42 +293,53 @@ void CSchema::OnBnClickedReadBtn3()
 
 	CDatabase db;
 	BOOL bRet = db.OpenEx(_T("DSN=DB02_Server; uid=KIM; PWD=aaaa;"), 0);
-
 	if (bRet) {
-		CRecordset rs(&db);
-		rs.Open(CRecordset::forwardOnly, _T("SELECT * FROM Driver"));
+		SQLHDBC hDbc = db.m_hdbc;
 
-		CString id;
-		CString name;
-		CString phone_no;
-		CString packs;
-		CString total_packs;
-		CString carno;
-		// Add the header string to the data list box at the top
-		m_dataList.InsertString(0, _T("ID / Name / Phone No / packages / Total Packages / Car No"));
-		m_dataList.InsertString(1, _T(""));
+		SQLHSTMT hStmt;
+		SQLCHAR query[101];
 
-		int index = 2; // Start index for inserting data strings
+		SQLSMALLINT numCols = -1;
+		SQLCHAR columnName[50][31];
+		SQLSMALLINT columnNameLen[50];
+		SQLSMALLINT columnDataType[50];
+		SQLULEN columnDataSize[50];
+		SQLSMALLINT columnDataDecimalDigits[50];
+		SQLSMALLINT columnDataNullable[50];
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char*)query, 101, "select * from driver");
+			SQLExecDirect(hStmt, query, SQL_NTS);
 
-		while (!rs.IsEOF()) {
-			rs.GetFieldValue((short)0, id);
-			rs.GetFieldValue((short)1, name);
-			rs.GetFieldValue((short)2, phone_no);
-			rs.GetFieldValue((short)3, packs);
-			rs.GetFieldValue((short)4, total_packs);
-			rs.GetFieldValue((short)5, carno);
+			SQLNumResultCols(hStmt, &numCols);
+			for (int i = 0; i < numCols; ++i)
+			{
+				SQLDescribeCol(hStmt, i + 1, columnName[i], 30, &columnNameLen[i], &columnDataType[i],
+					&columnDataSize[i], &columnDataDecimalDigits[i], &columnDataNullable[i]);
 
-			// Construct a string with the retrieved data
-			CString data;
-			data.Format(_T("%s    %s    %s    %s    %s    %s"),
-				id, name, phone_no, packs, total_packs, carno);
+				CString nullableString;
+				if (columnDataNullable[i] == SQL_NULLABLE)
+					nullableString = _T("NULL");
+				else
+					nullableString = _T("Not NULL");
 
-			// Add the string to the data list box
-			m_dataList.InsertString(index, data);
+				CString columnInfo;
+				columnInfo.Format(_T("#%d        %s        %d        %s        %d        %s\n"),
+					i + 1, columnName[i], columnNameLen[i], get_data_type_in_string(columnDataType[i]),
+					columnDataSize[i], nullableString);
 
-			index++;
+				m_dataList.AddString(columnInfo);
+			}
 
-			rs.MoveNext();
+			CString columnInfo;
+			columnInfo.Format(_T(""));
+			m_dataList.InsertString(0, columnInfo);
+
+			columnInfo.Format(_T("Column # / Name / Length / Data type / Data size  / Nullable"));
+			m_dataList.InsertString(0, columnInfo);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
 		}
 	}
 	else {
@@ -201,39 +357,53 @@ void CSchema::OnBnClickedReadBtn4()
 
 	CDatabase db;
 	BOOL bRet = db.OpenEx(_T("DSN=DB02_Server; uid=KIM; PWD=aaaa;"), 0);
-
 	if (bRet) {
-		CRecordset rs(&db);
-		rs.Open(CRecordset::forwardOnly, _T("SELECT * FROM Car"));
+		SQLHDBC hDbc = db.m_hdbc;
 
-		CString id;
-		CString capa_w;
-		CString capa_n;
-		CString bno;
+		SQLHSTMT hStmt;
+		SQLCHAR query[101];
 
-		// Add the header string to the data list box at the top
-		m_dataList.InsertString(0, _T("ID / Capability Weight / Capability No / Branch No"));
-		m_dataList.InsertString(1, _T(""));
+		SQLSMALLINT numCols = -1;
+		SQLCHAR columnName[50][31];
+		SQLSMALLINT columnNameLen[50];
+		SQLSMALLINT columnDataType[50];
+		SQLULEN columnDataSize[50];
+		SQLSMALLINT columnDataDecimalDigits[50];
+		SQLSMALLINT columnDataNullable[50];
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char*)query, 101, "select * from car");
+			SQLExecDirect(hStmt, query, SQL_NTS);
 
-		int index = 2; // Start index for inserting data strings
+			SQLNumResultCols(hStmt, &numCols);
+			for (int i = 0; i < numCols; ++i)
+			{
+				SQLDescribeCol(hStmt, i + 1, columnName[i], 30, &columnNameLen[i], &columnDataType[i],
+					&columnDataSize[i], &columnDataDecimalDigits[i], &columnDataNullable[i]);
 
-		while (!rs.IsEOF()) {
-			rs.GetFieldValue((short)0, id);
-			rs.GetFieldValue((short)1, capa_w);
-			rs.GetFieldValue((short)2, capa_n);
-			rs.GetFieldValue((short)3, bno);
+				CString nullableString;
+				if (columnDataNullable[i] == SQL_NULLABLE)
+					nullableString = _T("NULL");
+				else
+					nullableString = _T("Not NULL");
 
-			// Construct a string with the retrieved data
-			CString data;
-			data.Format(_T("%s    %s    %s    %s"),
-				id, capa_w, capa_n, bno);
+				CString columnInfo;
+				columnInfo.Format(_T("#%d        %s        %d        %s        %d        %s\n"),
+					i + 1, columnName[i], columnNameLen[i], get_data_type_in_string(columnDataType[i]),
+					columnDataSize[i], nullableString);
 
-			// Add the string to the data list box
-			m_dataList.InsertString(index, data);
+				m_dataList.AddString(columnInfo);
+			}
 
-			index++;
+			CString columnInfo;
+			columnInfo.Format(_T(""));
+			m_dataList.InsertString(0, columnInfo);
 
-			rs.MoveNext();
+			columnInfo.Format(_T("Column # / Name / Length / Data type / Data size  / Nullable"));
+			m_dataList.InsertString(0, columnInfo);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
 		}
 	}
 	else {
@@ -251,38 +421,53 @@ void CSchema::OnBnClickedReadBtn5()
 
 	CDatabase db;
 	BOOL bRet = db.OpenEx(_T("DSN=DB02_Server; uid=KIM; PWD=aaaa;"), 0);
-
 	if (bRet) {
-		CRecordset rs(&db);
-		rs.Open(CRecordset::forwardOnly, _T("SELECT * FROM Branch"));
+		SQLHDBC hDbc = db.m_hdbc;
 
-		CString id;
-		CString name;
-		CString phone_no;
-		CString manager;
-		// Add the header string to the data list box at the top
-		m_dataList.InsertString(0, _T("ID / Name / Phone No / Manager"));
-		m_dataList.InsertString(1, _T(""));
+		SQLHSTMT hStmt;
+		SQLCHAR query[101];
 
-		int index = 2; // Start index for inserting data strings
+		SQLSMALLINT numCols = -1;
+		SQLCHAR columnName[50][31];
+		SQLSMALLINT columnNameLen[50];
+		SQLSMALLINT columnDataType[50];
+		SQLULEN columnDataSize[50];
+		SQLSMALLINT columnDataDecimalDigits[50];
+		SQLSMALLINT columnDataNullable[50];
+		if (SQLAllocHandle(SQL_HANDLE_STMT, hDbc, &hStmt) == SQL_SUCCESS)
+		{
+			sprintf_s((char*)query, 101, "select * from branch");
+			SQLExecDirect(hStmt, query, SQL_NTS);
 
-		while (!rs.IsEOF()) {
-			rs.GetFieldValue((short)0, id);
-			rs.GetFieldValue((short)1, name);
-			rs.GetFieldValue((short)2, phone_no);
-			rs.GetFieldValue((short)3, manager);
+			SQLNumResultCols(hStmt, &numCols);
+			for (int i = 0; i < numCols; ++i)
+			{
+				SQLDescribeCol(hStmt, i + 1, columnName[i], 30, &columnNameLen[i], &columnDataType[i],
+					&columnDataSize[i], &columnDataDecimalDigits[i], &columnDataNullable[i]);
 
-			// Construct a string with the retrieved data
-			CString data;
-			data.Format(_T("%s    %s    %s    %s"),
-				id, name, phone_no, manager);
+				CString nullableString;
+				if (columnDataNullable[i] == SQL_NULLABLE)
+					nullableString = _T("NULL");
+				else
+					nullableString = _T("Not NULL");
 
-			// Add the string to the data list box
-			m_dataList.InsertString(index, data);
+				CString columnInfo;
+				columnInfo.Format(_T("#%d        %s        %d        %s        %d        %s\n"),
+					i + 1, columnName[i], columnNameLen[i], get_data_type_in_string(columnDataType[i]),
+					columnDataSize[i], nullableString);
 
-			index++;
+				m_dataList.AddString(columnInfo);
+			}
 
-			rs.MoveNext();
+			CString columnInfo;
+			columnInfo.Format(_T(""));
+			m_dataList.InsertString(0, columnInfo);
+
+			columnInfo.Format(_T("Column # / Name / Length / Data type / Data size  / Nullable"));
+			m_dataList.InsertString(0, columnInfo);
+
+			SQLCloseCursor(hStmt);
+			SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
 		}
 	}
 	else {
@@ -290,4 +475,10 @@ void CSchema::OnBnClickedReadBtn5()
 	}
 
 	db.Close();
+}
+
+
+void CSchema::OnLbnSelchangeDataList()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

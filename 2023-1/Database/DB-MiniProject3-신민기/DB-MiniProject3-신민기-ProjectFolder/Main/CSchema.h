@@ -27,4 +27,7 @@ public:
 	afx_msg void OnBnClickedReadBtn3();
 	afx_msg void OnBnClickedReadBtn4();
 	afx_msg void OnBnClickedReadBtn5();
+	afx_msg void OnLbnSelchangeDataList();
+	CMFCShellListCtrl m_dataShell;
 };
+const char* get_data_type_in_string(SQLSMALLINT dataType);

@@ -30,7 +30,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -97,6 +97,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>odbc32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>odbc32.lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -185,6 +186,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CCustom.h" />
+    <ClInclude Include="CCustomTap1.h" />
+    <ClInclude Include="CCustomTap2.h" />
+    <ClInclude Include="CCustomTap3.h" />
+    <ClInclude Include="CCustomTap4.h" />
+    <ClInclude Include="CCustomTap5.h" />
     <ClInclude Include="CDelete.h" />
     <ClInclude Include="CDeleteTap1.h" />
     <ClInclude Include="CDeleteTap2.h" />
@@ -212,6 +218,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCustom.cpp" />
+    <ClCompile Include="CCustomTap1.cpp" />
+    <ClCompile Include="CCustomTap2.cpp" />
+    <ClCompile Include="CCustomTap3.cpp" />
+    <ClCompile Include="CCustomTap4.cpp" />
+    <ClCompile Include="CCustomTap5.cpp" />
     <ClCompile Include="CDelete.cpp" />
     <ClCompile Include="CDeleteTap1.cpp" />
     <ClCompile Include="CDeleteTap2.cpp" />

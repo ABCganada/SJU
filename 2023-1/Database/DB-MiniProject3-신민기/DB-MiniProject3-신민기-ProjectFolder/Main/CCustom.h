@@ -21,8 +21,9 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CListBox m_dataList;
-	CEdit m_input;
-	CString m_inputText;
 	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedButton4();
+	afx_msg void OnBnClickedButton5();
 };
