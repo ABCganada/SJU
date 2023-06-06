@@ -122,11 +122,17 @@ where customer_id in (
 update driver
 set total_packs = total_packs + (select count(*) from customer, package where driver.id=customer.dno and customer.id=package.customer_id and package.status <> 1);
 -------------------------
-select id, (select count(*) from customer where customer.dno = driver.id) as total_customer
+select id, (select count(*) 
+          from customer 
+          where customer.dno = driver.id) as total_customer
 from driver;
 -------------------------
-update driver
-set packs = (select count(*) from customer, package where driver.id=customer.dno and customer.id=package.customer_id and package.status <> 1);
+update driver D
+set D.packs = (select count(*) 
+            from customer C, package P
+            where D.id=C.dno 
+            and C.id=P.customer_id 
+            and P.status <> 1);
 -------------------------
 select name, address, phone_no
 from customer
@@ -134,11 +140,12 @@ where address = 'jeju'
 -------------------------
 select driver.name, car.bno
 from driver, car
-where driver.carno = car.id and car.bno = 777;
+where driver.carno = car.id and car.bno = '%s';
 -------------------------
 select *
 from car
-where car.id not in (select carno from driver)
+where id not in (select carno 
+                from driver);
 -------------------------
 select customer_id, pno, status
 from package
@@ -155,12 +162,12 @@ select id, name,, phone_no, email
 from customer
 order by name asc;
 -------------------------
-SELECT id, name, CASE
-  WHEN total_packs >= 5 THEN 2500000 + (15000 * total_packs)
-  ELSE 2500000
-  END AS Salary
-FROM driver
-order by name;
+select id, name, case
+  when total_packs >= 5 then 2500000 + (15000 * total_packs)
+  else 2500000
+  end as Salary
+from driver
+order by total_packs desc;
 -------------------------
 SELECT *
 FROM car
@@ -173,3 +180,30 @@ select customer.id, SUM(package.charge) as total_charge
 from customer, package
 where customer.id = package.customer_id
 group by customer.id;
+-------------------------
+select id, name, total_packs, CASE 
+                              WHEN total_packs >= 3 THEN 2500000 + (15000 * total_packs) 
+                              ELSE 2500000 END 
+                              AS Salary 
+from driver 
+order by total_packs desc;
+--------------------------
+delete from driver 
+where id = '%s';
+--------------------------
+select id, name, total_packs, case when total_packs >= 5 
+                              then 2500000 + (15000 * total_packs) 
+                              else 2500000 end 
+                              as Salary 
+from driver 
+where id = '%s';
+--------------------------
+update package 
+set charge = charge + 1000 
+where weight >= '%s';
+--------------------------
+update package 
+set charge = charge + 1000 
+where customer_id in (select id 
+                      from customer 
+                      where address = '%s');

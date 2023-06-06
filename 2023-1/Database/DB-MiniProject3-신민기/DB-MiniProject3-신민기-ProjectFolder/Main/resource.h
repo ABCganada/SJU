@@ -24,6 +24,11 @@
 #define UpdateTap4                      162
 #define DeleteTap3                      164
 #define DeleteTap4                      166
+#define CustomTap1                      169
+#define CustomTap2                      171
+#define CustomTap3                      173
+#define CustomTap4                      175
+#define CustomTap5                      177
 #define main_button1                    1000
 #define IDC_DATA_LIST                   1001
 #define IDC_READ_BTN                    1002
@@ -56,9 +61,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        168
+#define _APS_NEXT_RESOURCE_VALUE        179
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1029
+#define _APS_NEXT_CONTROL_VALUE         1031
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

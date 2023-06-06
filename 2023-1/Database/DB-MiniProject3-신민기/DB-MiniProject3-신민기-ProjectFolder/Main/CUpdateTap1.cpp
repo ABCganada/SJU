@@ -88,9 +88,9 @@ void CUpdateTap1::OnBnClickedButton1()
 void CUpdateTap1::OnBnClickedButton3()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_input1.GetWindowTextW(m_inputText1);
+	m_input1.GetWindowText(m_inputText1);
 	CString str1 = m_inputText1;
-	m_input2.GetWindowTextW(m_inputText2);
+	m_input2.GetWindowText(m_inputText2);
 	CString str2 = m_inputText2;
 
 	CDatabase db;
