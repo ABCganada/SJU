@@ -30,17 +30,19 @@ CREATE TABLE driver (
 );
 -------------------------
 CREATE TABLE customer (
-  id INT IDENTITY(1,1) PRIMARY KEY,
+  id int IDENTITY(1,1),
   name VARCHAR(255),
   address VARCHAR(255),
   phone_no VARCHAR(20),
   email VARCHAR(255),
   dno INT,
+
+  primary key(id),
   FOREIGN KEY (dno) REFERENCES driver(id)
 );
 --------------------------
 create table package(
-  customer_id int,
+  customer_id int not null,
   pno int not null,
   weight int,
   status int default 0,
