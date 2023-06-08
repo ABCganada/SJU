@@ -1,44 +1,42 @@
 create table branch(
   id int not null,
-  name varchar(255),
+  name varchar(255) not null,
   phone_no varchar(255),
   manager int default 1,
 
   primary key(id),
-  foreign key(manager) references branch(id)
+  foreign key(manager) references branch(id) on delete no action
 );
 -------------------------
 create table car(
   id int not null,
   capa_w int,
   capa_n int,
-  bno int default 1,
+  bno int not null default 1,
 
   primary key (id),
   foreign key (bno) references branch(id) on delete set default
 );
 -------------------------
-CREATE TABLE driver (
-  id INT NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  phone_no VARCHAR(255) NOT NULL,
-  packs INT DEFAULT 0,
-  total_packs INT DEFAULT 0,
-  carno INT NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (carno) REFERENCES car (id) on delete cascade
+create table driver (
+  id int not null,
+  name varchar(255) not null,
+  phone_no varchar(255) not null,
+  packs int default 0,
+  total_packs int default 0,
+  carno int not null,
+  primary key (id),
+  foreign key (carno) references car (id) on delete cascade
 );
 -------------------------
-CREATE TABLE customer (
-  id int IDENTITY(1,1),
-  name VARCHAR(255),
-  address VARCHAR(255),
-  phone_no VARCHAR(20),
-  email VARCHAR(255),
+create table customer (
+  id int identity(1,1) primary key not null,
+  name varchar(255) not null,
+  address varchar(255),
+  phone_no varchar(20),
+  email varchar(255),
   dno INT,
-
-  primary key(id),
-  FOREIGN KEY (dno) REFERENCES driver(id)
+  foreign key (dno) references driver(id) on delete cascade
 );
 --------------------------
 create table package(
@@ -49,7 +47,7 @@ create table package(
   charge int default 3500,
 
   primary key(customer_id, pno),
-  foreign key(customer_id) references customer(id)
+  foreign key(customer_id) references customer(id) on delete cascade
 );
 -------------------------
 insert into branch values(1, 'master', '111-0001', null);
