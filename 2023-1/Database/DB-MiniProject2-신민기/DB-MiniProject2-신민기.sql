@@ -5,7 +5,7 @@ create table branch(
   manager int default 1,
 
   primary key(id),
-  foreign key(manager) references branch(id)
+  foreign key(manager) references branch(id) on delete set default
 );
 -------------------------
 create table car(
@@ -36,7 +36,7 @@ CREATE TABLE customer (
   phone_no VARCHAR(20),
   email VARCHAR(255),
   dno INT,
-  FOREIGN KEY (dno) REFERENCES driver(id)
+  FOREIGN KEY (dno) REFERENCES driver(id) on delete cascade
 );
 --------------------------
 create table package(
@@ -47,7 +47,7 @@ create table package(
   charge int default 3500,
 
   primary key(customer_id, pno),
-  foreign key(customer_id) references customer(id)
+  foreign key(customer_id) references customer(id) on delete cascade
 );
 -------------------------
 insert into branch values(1, 'master', '111-0001', null);
@@ -202,6 +202,134 @@ update package
 set charge = charge + 1000 
 where weight >= '%s';
 --------------------------
+update package 
+set charge = charge + 1000 
+where customer_id in (select id 
+                      from customer 
+                      where address = '%s');
+--------------------------
+select id, (select count(*) 
+            from customer 
+            where customer.dno = driver.id) as total_customer 
+from driver;
+--------------------------
+insert into package values('%s', '%s', '%s', '%s', '%s');
+
+insert into driver values('%s', '%s', '%s', 0, 0, '%s');
+
+insert into branch values('%s', '%s', '%s', '%s');
+insert into car values('%s', '%s', '%s', '%s');
+
+insert into customer(name, address, phone_no, email, dno) 
+values('%s', '%s', '%s', '%s', NULL);
+
+--------------------------
+delete from driver 
+where id = '%s';
+
+delete from package 
+where customer_id = '%s' and pno = '%s';
+
+delete from branch 
+where id = '%s';
+
+delete from car 
+where car.id = '%s';
+
+update package 
+set status = 1 
+where customer_id = '%s' and pno = '%s';
+
+update package 
+set charge = charge + 1000 
+where customer_id in (select id 
+                      from customer 
+                      where address = 'jeju');
+
+update driver 
+set packs = (select count(*) 
+            from customer, package 
+            where driver.id = customer.dno 
+            and customer.id = package.customer_id 
+            and package.status < > 1);
+
+update driver 
+set total_packs = total_packs + packs;
+
+update package 
+set charge = charge + 1000 
+where weight >= 10;
+
+select id, (select count(*) 
+            from customer 
+            where customer.dno = driver.id) as total_customer 
+from driver;
+
+select D.name, C.bno 
+from driver D, car C
+where D.carno = C.id and C.bno = '%s';
+
+select id, (select count(*) 
+            from customer 
+            where customer.dno = driver.id) as total_customer 
+from driver;
+
+select * 
+from car 
+where id not in (select carno 
+                from driver);
+
+--------------------------------
+
+update package 
+set charge = charge + 1000 
+where customer_id in (select id 
+                      from customer 
+                      where address = 'jeju');
+
+update driver 
+set packs = (select count(*) 
+            from customer, package 
+            where driver.id = customer.dno 
+            and customer.id = package.customer_id 
+            and package.status < > 1);
+
+select customer.id, customer.name, SUM(package.charge) as total_charge 
+from customer, package 
+where customer.id = package.customer_id 
+group by customer.id, customer.name;
+
+select customer_id, pno, status 
+from package;
+
+update package 
+set status = 1
+where customer_id = '%s' and pno = '%s';
+
+SELECT id, name 
+from driver;
+
+SELECT id, name, total_packs, CASE WHEN total_packs >= 5 
+                              THEN 2500000 + (15000 * total_packs) 
+                              ELSE 2500000 END AS Salary 
+FROM driver
+where id = '%s';
+
+select customer_id, pno, status 
+from package 
+where status = 1;
+
+delete 
+from package 
+where customer_id = '%s' and pno = '%s';
+
+select customer_id, pno, weight, charge 
+from package;
+
+update package 
+set charge = charge + 1000 
+where weight >= '%s';
+
 update package 
 set charge = charge + 1000 
 where customer_id in (select id 
