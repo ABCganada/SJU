@@ -30,11 +30,11 @@ void insertSort(int arr[], int n){
     int j;
 
     for(int i=0; i<n; i++){
-        int insertElem = arr[i];    // 73
+        int insertElem = arr[i];
 
-        for(j=i-1; j>=0; j--){  //j=0 ~ 0
+        for(j=i-1; j>=0; j--){
 
-            if(arr[j] > insertElem){    // 3 > 73
+            if(arr[j] > insertElem){
                 arr[j+1] = arr[j];
                 continue;
             }
@@ -43,10 +43,5 @@ void insertSort(int arr[], int n){
         }
 
         arr[j+1] = insertElem;
-
-        // for(int k=0; k<n; k++){
-        //     printf(" %d", arr[k]);
-        // }
-        // printf("\n");
     }
 }
