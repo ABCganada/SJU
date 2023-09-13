@@ -3,6 +3,7 @@
 
 void swap(int *a, int *b);
 int findMaxIdx(int *arr, int startIdx, int endIdx);
+void selectSort(int arr[], int n);
 
 int main()
 {
@@ -15,12 +16,7 @@ int main()
         scanf("%d", &arr[i]);
     }
 
-    int pos = n-1;
-    for(int i=0; i<n-1; i++){
-        int swapPos = findMaxIdx(arr, 1, n-i);
-        swap(&arr[swapPos], &arr[pos]);
-        pos--;
-    }
+    selectSort(arr, n);
 
     for(int i=0; i<n; i++){
         printf(" %d", arr[i]);
@@ -47,4 +43,13 @@ int findMaxIdx(int *arr, int startIdx, int endIdx){
         }
     }
     return ret;
+}
+void selectSort(int arr[], int n){
+    int pos = n-1;
+
+    for(int i=0; i<n-1; i++){
+        int swapPos = findMaxIdx(arr, 1, n-i);
+        swap(&arr[swapPos], &arr[pos]);
+        pos--;
+    }
 }
