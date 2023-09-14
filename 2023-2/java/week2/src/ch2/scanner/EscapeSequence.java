@@ -1,4 +1,4 @@
-package ch2;
+package ch2.scanner;
 
 public class EscapeSequence {
 
