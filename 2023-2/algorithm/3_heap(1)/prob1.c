@@ -21,6 +21,8 @@ void insertItem(Heap *heap, int key);
 int removeMax(Heap *heap);
 void printHeap(Heap *heap);
 void swap(int *a, int *b);
+void upHeap(Heap *heap, int idx);
+void downHeap(Heap *heap, int idx);
 
 int main()
 {
@@ -61,40 +63,13 @@ void initHeap(Heap *heap){
 void insertItem(Heap *heap, int key){
     heap->arr[++heap->lastIdx] = key;
 
-    int parentIdx = heap->lastIdx / 2;
-    int childIdx = heap->lastIdx;
-
-    while(parentIdx > 0){
-        if(heap->arr[parentIdx] < heap->arr[childIdx]){
-            swap(&heap->arr[parentIdx], &heap->arr[childIdx]);
-            childIdx = parentIdx;
-            parentIdx /= 2;
-        } else{
-            break;
-        }
-    }
+    upHeap(heap, heap->lastIdx);
 }
 int removeMax(Heap *heap){
     int ret = heap->arr[1];
 
     heap->arr[1] = heap->arr[heap->lastIdx--];
-
-    int i = 1;
-    while(2*i <= heap->lastIdx){
-        int bigIdx;
-        if(2*i <=heap->lastIdx && 2*i + 1 <= heap->lastIdx){
-            bigIdx = heap->arr[2*i] > heap->arr[2*i +1] ? 2*i : 2*i + 1;
-        } else{
-            bigIdx = 2*i;
-        }
-        
-        if(heap->arr[i] > heap->arr[bigIdx]){
-            break;
-        } else{
-            swap(&heap->arr[i], &heap->arr[bigIdx]);
-            i = bigIdx;
-        }
-    }
+    downHeap(heap, 1);
 
     return ret;
 }
@@ -108,4 +83,35 @@ void swap(int *a, int *b){
     int tmp = *a;
     *a = *b;
     *b = tmp;
+}
+void upHeap(Heap *heap, int idx){
+    int parentIdx = idx/2;
+
+    while(parentIdx > 0){
+        if(heap->arr[parentIdx] < heap->arr[idx]){
+            swap(&heap->arr[parentIdx], &heap->arr[idx]);
+            idx = parentIdx;
+            parentIdx /= 2;
+        } else{
+            break;
+        }
+    }
+}
+void downHeap(Heap *heap, int idx){
+    while(idx * 2 <= heap->lastIdx){
+        int bigIdx;
+
+        if(idx*2 <= heap->lastIdx && idx*2 + 1 <= heap->lastIdx){
+            bigIdx = heap->arr[idx*2] > heap->arr[idx*2 + 1] ? idx*2 : idx*2 + 1;
+        } else{
+            bigIdx = idx*2;
+        }
+
+        if(heap->arr[idx] > heap->arr[bigIdx]){
+            break;
+        } else{
+            swap(&heap->arr[idx], &heap->arr[bigIdx]);
+            idx = bigIdx;
+        }
+    }
 }
