@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// 1. 비재귀적 방식 풀이
+// 1. 비재귀적 방식 풀이: buildHeap()
+// 2. 재귀적 방식 풀이: rbuildHeap()
 
 /**
  * 배열 사용 순차힙 구현
@@ -23,7 +24,7 @@ typedef struct __heap{
 void initHeap(Heap *heap);
 void printHeap(Heap *heap);
 void downHeap(Heap *heap, int idx);
-void rBuildHeap(int idx);
+void rBuildHeap(Heap *heap, int idx);
 void buildHeap(Heap *heap);
 void swap(int *a, int *b);
 
@@ -38,7 +39,8 @@ int main()
         scanf("%d", &H.arr[++H.lastIdx]);
     }
 
-    buildHeap(&H);
+    // buildHeap(&H);
+    rBuildHeap(&H, 1);
 
     printHeap(&H);
 
@@ -70,6 +72,14 @@ void downHeap(Heap *heap, int idx){
             idx = bigIdx;
         }
     }
+}
+void rBuildHeap(Heap *heap, int idx){
+    if(idx > heap->lastIdx)
+        return;
+    
+    rBuildHeap(heap, idx*2);
+    rBuildHeap(heap, idx*2 + 1);
+    downHeap(heap, idx);
 }
 void buildHeap(Heap *heap){
 
