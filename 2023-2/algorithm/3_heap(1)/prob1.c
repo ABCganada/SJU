@@ -11,24 +11,26 @@
  * 힙의 최대 항목 수 < 100
 */
 
-typedef struct __heap{
-    int lastIdx;
-    int arr[100];
-}Heap;
+// typedef struct __heap{
+//     int lastIdx;
+//     int arr[100];
+// }Heap;
 
-void initHeap(Heap *heap);
-void insertItem(Heap *heap, int key);
-int removeMax(Heap *heap);
-void printHeap(Heap *heap);
+// 구조체 X, 전역 변수 생성
+int heapArr[100];
+int lastIdx = 0;
+int n;
+
+// void initHeap(Heap *heap);
+void insertItem(int key);
+int removeMax();
+void printHeap();
 void swap(int *a, int *b);
-void upHeap(Heap *heap, int idx);
-void downHeap(Heap *heap, int idx);
+void upHeap(int idx);
+void downHeap(int idx);
 
 int main()
 {
-    Heap H;
-    initHeap(&H);
-
     char cmd;
     int key;
 
@@ -42,12 +44,12 @@ int main()
             scanf("%d", &key);
             getchar();
 
-            insertItem(&H, key);
+            insertItem(key);
             printf("0\n");
         } else if(cmd == 'd'){
-            printf("%d\n", removeMax(&H));
+            printf("%d\n", removeMax());
         } else if(cmd == 'p'){
-            printHeap(&H);
+            printHeap();
         }
     }
 
@@ -57,25 +59,25 @@ int main()
 
     return 0;
 }
-void initHeap(Heap *heap){
-    heap->lastIdx = 0;
-}
-void insertItem(Heap *heap, int key){
-    heap->arr[++heap->lastIdx] = key;
+// void initHeap(Heap *heap){
+//     heap->lastIdx = 0;
+// }
+void insertItem(int key){
+    heapArr[++lastIdx] = key;
 
-    upHeap(heap, heap->lastIdx);
+    upHeap(lastIdx);
 }
-int removeMax(Heap *heap){
-    int ret = heap->arr[1];
+int removeMax(){
+    int ret = heapArr[1];
 
-    heap->arr[1] = heap->arr[heap->lastIdx--];
-    downHeap(heap, 1);
+    heapArr[1] = heapArr[lastIdx--];
+    downHeap(1);
 
     return ret;
 }
-void printHeap(Heap *heap){
-    for(int i=1; i<=heap->lastIdx; i++){
-        printf(" %d", heap->arr[i]);
+void printHeap(){
+    for(int i=1; i<=lastIdx; i++){
+        printf(" %d", heapArr[i]);
     }
     printf("\n");
 }
@@ -84,12 +86,12 @@ void swap(int *a, int *b){
     *a = *b;
     *b = tmp;
 }
-void upHeap(Heap *heap, int idx){
+void upHeap(int idx){
     int parentIdx = idx/2;
 
     while(parentIdx > 0){
-        if(heap->arr[parentIdx] < heap->arr[idx]){
-            swap(&heap->arr[parentIdx], &heap->arr[idx]);
+        if(heapArr[parentIdx] < heapArr[idx]){
+            swap(&heapArr[parentIdx], &heapArr[idx]);
             idx = parentIdx;
             parentIdx /= 2;
         } else{
@@ -97,20 +99,20 @@ void upHeap(Heap *heap, int idx){
         }
     }
 }
-void downHeap(Heap *heap, int idx){
-    while(idx * 2 <= heap->lastIdx){
+void downHeap(int idx){
+    while(idx * 2 <= lastIdx){
         int bigIdx;
 
-        if(idx*2 <= heap->lastIdx && idx*2 + 1 <= heap->lastIdx){
-            bigIdx = heap->arr[idx*2] > heap->arr[idx*2 + 1] ? idx*2 : idx*2 + 1;
+        if(idx*2 <= lastIdx && idx*2 + 1 <= lastIdx){
+            bigIdx = heapArr[idx*2] > heapArr[idx*2 + 1] ? idx*2 : idx*2 + 1;
         } else{
             bigIdx = idx*2;
         }
 
-        if(heap->arr[idx] > heap->arr[bigIdx]){
+        if(heapArr[idx] > heapArr[bigIdx]){
             break;
         } else{
-            swap(&heap->arr[idx], &heap->arr[bigIdx]);
+            swap(&heapArr[idx], &heapArr[bigIdx]);
             idx = bigIdx;
         }
     }

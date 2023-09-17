@@ -14,77 +14,77 @@
  * 힙의 최대 항목 수 < 100
 */
 
+// typedef struct __heap{
+//     int lastIdx;
+//     int arr[100];
+// }Heap;
+
+// 구조체 X, 전역 변수 생성
+int heapArr[100];
+int lastIdx = 0;
 int n;
 
-typedef struct __heap{
-    int lastIdx;
-    int arr[100];
-}Heap;
-
-void initHeap(Heap *heap);
-void printHeap(Heap *heap);
-void downHeap(Heap *heap, int idx);
-void rBuildHeap(Heap *heap, int idx);
-void buildHeap(Heap *heap);
+// void initHeap(Heap *heap);
+void printHeap();
+void downHeap(int idx);
+void rBuildHeap(int idx);
+void buildHeap();
 void swap(int *a, int *b);
 
 int main()
 {
-    Heap H;
-    initHeap(&H);
-
     scanf("%d", &n);
 
     for(int i=0; i<n; i++){
-        scanf("%d", &H.arr[++H.lastIdx]);
+        scanf("%d", &heapArr[++lastIdx]);
     }
 
     // buildHeap(&H);
-    rBuildHeap(&H, 1);
+    rBuildHeap(1);
 
-    printHeap(&H);
+    printHeap();
 
     return 0;
 }
-void initHeap(Heap *heap){
-    heap->lastIdx = 0;
-}
-void printHeap(Heap *heap){
-    for(int i=1; i<=heap->lastIdx; i++){
-        printf(" %d", heap->arr[i]);
+// void initHeap(Heap *heap){
+//     heap->lastIdx = 0;
+// }
+void printHeap(){
+    for(int i=1; i<=lastIdx; i++){
+        printf(" %d", heapArr[i]);
     }
     printf("\n");
 }
-void downHeap(Heap *heap, int idx){
-    while(idx * 2 <= heap->lastIdx){
+void downHeap(int idx){
+    while(idx * 2 <= lastIdx){
         int bigIdx;
 
-        if(idx*2 <= heap->lastIdx && idx*2 + 1 <= heap->lastIdx){
-            bigIdx = heap->arr[idx*2] > heap->arr[idx*2 + 1] ? idx*2 : idx*2 + 1;
+        if(idx*2 <= lastIdx && idx*2 + 1 <= lastIdx){
+            bigIdx = heapArr[idx*2] > heapArr[idx*2 + 1] ? idx*2 : idx*2 + 1;
         } else{
             bigIdx = idx*2;
         }
 
-        if(heap->arr[idx] > heap->arr[bigIdx]){
+        if(heapArr[idx] > heapArr[bigIdx]){
             break;
         } else{
-            swap(&heap->arr[idx], &heap->arr[bigIdx]);
+            swap(&heapArr[idx], &heapArr[bigIdx]);
             idx = bigIdx;
         }
     }
 }
-void rBuildHeap(Heap *heap, int idx){
-    if(idx > heap->lastIdx)
+void rBuildHeap(int idx){
+    if(idx > lastIdx)
         return;
     
-    rBuildHeap(heap, idx*2);
-    rBuildHeap(heap, idx*2 + 1);
-    downHeap(heap, idx);
+    rBuildHeap(idx*2);
+    rBuildHeap(idx*2 + 1);
+    downHeap(idx);
 }
-void buildHeap(Heap *heap){
+void buildHeap(){
 
     for(int i=n/2; i>=1; i--){
-        downHeap(heap, i);
+        downHeap(i);
     }
 }
 void swap(int *a, int *b){
