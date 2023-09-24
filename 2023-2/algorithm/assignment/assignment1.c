@@ -31,7 +31,6 @@ int main()
     int* L = buildList(miniTestSize, 1, 100);     //1~100까지 10개의 정수 무순리스트 생성
     int output[4];
 
-    buildHeap(L, 1, miniTestSize);    //힙 생성
     printList(L, miniTestSize);       //L 출력
 
     for (int k = 1; k <= 3; k++) {
@@ -43,6 +42,8 @@ int main()
         printf(" %d", output[k]);
     }
     printf("\n");
+
+    free(L);
 
     //배열 사이즈 100,000의 test
     LARGE_INTEGER ticksPerSec;
@@ -66,6 +67,8 @@ int main()
         t.QuadPart = end.QuadPart - start.QuadPart; //함수 호출 시간 계산
         printf("%d번째 원소: %d / CPU time : %.12lf ms\n", kArray[k], e, 1000*((double)t.QuadPart / (double)ticksPerSec.QuadPart));
     }
+
+    free(L);
 
     return 0;
 }
