@@ -2,6 +2,8 @@ package exercise;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Ex3 {
 
@@ -27,8 +29,16 @@ public class Ex3 {
         JLabel label1 = new JLabel("First Panel");
         panel1.add(label1);
 
-        JLabel label2 = new JLabel("Second Panel");
+        JLabel label2 = new JLabel("if you want to proceed");
         panel2.add(label2);
+        JButton button = new JButton("Click here");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "버튼을 클릭하셨습니다!");
+            }
+        });
+        panel2.add(button);
 
         JLabel label3 = new JLabel("세종대학교(Sejong University)", icon, SwingConstants.CENTER);
         label3.setHorizontalTextPosition(SwingConstants.CENTER);
