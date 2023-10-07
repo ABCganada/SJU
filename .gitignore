@@ -12,3 +12,4 @@ code.c++
 build-assignment1-Qt_6_4_2_for_macOS-Debug
 build-helloworld-Qt_6_4_2_for_macOS-Debug
 .vs
+.vscode
