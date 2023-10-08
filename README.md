@@ -13,7 +13,7 @@
 ## 2023-1
 - Data Structure
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Database">Database</a>
-  - <a href="">velog</a>
+  - <a href="https://velog.io/@mk9712/Database-Design">velog</a>
 
 ## 2023-2
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-2/algorithm">Algorithm</a>
