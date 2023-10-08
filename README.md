@@ -2,7 +2,7 @@
 학교 학습 내용&기록
 
 ## 2022-1
-- C Programming
+- <a href="https://github.com/ABCganada/SJU/tree/main/2022-1/C-programming">C Programming</a>
 - OS
 
 ## 2022-2
