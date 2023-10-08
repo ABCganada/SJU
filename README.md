@@ -4,11 +4,14 @@
 ## 2022-1
 - <a href="https://github.com/ABCganada/SJU/tree/main/2022-1/C-programming">C Programming</a>
 - OS
+- Probability & Statistics Programming
 
 ## 2022-2
 - <a href="https://github.com/ABCganada/SJU/tree/main/2022-2/Advanced.C">Advanced C Programming</a>
-- Linear Algebra
-- Discrete Mathematics
+- Linear algebra
+- Discrete mathematics
+- Computer architecture
+- Computer network
 
 ## 2023-1
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Datastructure">Data Structure</a>
