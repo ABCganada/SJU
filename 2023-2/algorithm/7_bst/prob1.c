@@ -10,23 +10,22 @@ typedef struct __tree{
     struct __node *root;
 }Tree;
 
+Tree tree;
+
 void init(Tree *ptree);                 //트리 초기화 함수
-Node *createNode(int k);                //k원소 노드 생성 함수
 void insert(Tree *ptree, int k);        //k원소 노드 트리 삽입 함수
-Node *searchTree(Tree *ptree, int k);      //k원소 노드를 얻는 함수
-Node *getParent(Node *node, int k);     //k원소 혹은 k원소가 들어갈 자리에 대한 부모 노드를 얻는 함수
-int removeNode(Tree *ptree, int k);
-void expandExternal(Node *node);
-Node *reduceExternal(Node *z);
+Node *searchTree(Tree *ptree, int k);   //k원소 노드 탐색 함수
+int removeNode(Tree *ptree, int k);     //k원소 노드 삭제 함수
+void expandExternal(Node *node);        //삽입 후 노드 확장 함수
+Node *reduceExternal(Node *z);          //삭제 후 노드 축소 함수
 int isExternal(Node *node);             //외부노드 확인 함수
-Node *inOrderSucc(Node *node);
+Node *inOrderSucc(Node *node);          //중위순회후계자 찾는 함수
 void printTree(Node *node);             //트리 전위순회 출력 함수
-void freeTree(Node *node);
-Node *sibling(Node *node);
+void freeTree(Node *node);              //트리 후위순회 메모리 해제 함수
+Node *sibling(Node *node);              //node의 형제 찾는 함수
 
 int main()
 {
-    Tree tree;
     init(&tree);
     char cmd;
     int data;
@@ -48,7 +47,7 @@ int main()
             scanf("%d", &data);
             getchar();
 
-            if(searchTree(&tree, data)){
+            if(!isExternal(searchTree(&tree, data))){
                 printf("%d\n", data);
             } else{
                 printf("X\n");
@@ -69,40 +68,35 @@ int main()
     return 0;
 }
 void init(Tree *ptree){ //트리 초기화 함수
-    ptree->root = NULL;
-}
-Node *createNode(int k){    //k원소 노드 생성 함수
     Node *newNode = (Node *)malloc(sizeof(Node));
-    newNode->data = k;
     newNode->left = NULL;
     newNode->right = NULL;
     newNode->parent = NULL;
 
-    return newNode;
+    ptree->root = newNode;
 }
 void insert(Tree *ptree, int k){    //k원소 노드 트리 삽입 함수
     if(isExternal(ptree->root)){
-        ptree->root = createNode(k);
+        ptree->root->data = k;
         expandExternal(ptree->root);
         return;
     }
 
-    Node *newNode = searchTree(ptree, k);
-    Node *parentNode = getParent(ptree->root, k);
-    if(!newNode->left && !newNode->right){
-        newNode = createNode(k);
-        newNode->parent = parentNode;
-        if(parentNode->data > newNode->data){
-            parentNode->left = newNode;
-        } else{
-            parentNode->right = newNode;
-        }
+    Node *insertNode = searchTree(ptree, k);
+    // Node *parentNode = getParent(ptree->root, k);
+    if(isExternal(insertNode)){
+        insertNode->data = k;
+        expandExternal(insertNode);
     }
 }
 Node *searchTree(Tree *ptree, int k){   //k원소의 노드를 얻는 함수
     Node *ptrNode = ptree->root;
 
-    while(ptrNode && ptrNode->data != k){
+    while(!isExternal(ptrNode)){
+        if(ptrNode->data == k){
+            break;
+        }
+
         if(ptrNode->data > k){
             ptrNode = ptrNode->left;
         } else{
@@ -110,20 +104,6 @@ Node *searchTree(Tree *ptree, int k){   //k원소의 노드를 얻는 함수
         }
     }
     return ptrNode;
-}
-Node *getParent(Node *node, int k){ //k원소 혹은 k원소가 들어갈 자리의 부모 노드를 얻는 함수
-    Node *cur = node;
-    Node *before = node;
-
-    while(cur && cur->data != k){
-        before = cur;
-        if(cur->data > k){
-            cur = cur->left;
-        } else{
-            cur = cur->right;
-        }
-    }
-    return before;
 }
 int removeNode(Tree *ptree, int k){
     Node *rmNode = searchTree(ptree, k);
@@ -135,50 +115,58 @@ int removeNode(Tree *ptree, int k){
 
     int ret = rmNode->data;
 
+    if(isExternal(rmNode->left) && isExternal(rmNode->right)){  //rmNode의 자식 모두 외부노드일 경우
+        Node *rmChild = rmNode->left;
+        reduceExternal(rmChild);
+        return ret;
+    }
+
     Node *child = rmNode->left;
     if(!isExternal(child)){
         child = rmNode->right;
     }
 
     if(isExternal(child)){      //rmNode의 child가 하나라도 외부노드일 경우
-        printf("**\n");
         reduceExternal(child);
-        printf("* *\n");
     } else{
         Node *succ = inOrderSucc(rmNode);
-        Node *succChild = succ->left;
+        Node *succLeftChild = succ->left;
         rmNode->data = succ->data;
-        printf("***\n");
-        reduceExternal(succChild);
-        printf("* * *\n");
+        reduceExternal(succLeftChild);
     }
     return ret;
 }
 void expandExternal(Node *node){
     node->left = (Node *)malloc(sizeof(Node));
-    node->right = (Node *)malloc(sizeof(Node));
-}
-Node *reduceExternal(Node *z){
-    Node *w = z->parent;
-    Node *zs = sibling(z);
+    node->left->parent = node;
+    node->left->left = NULL;
+    node->left->right = NULL;
 
-    if(w->parent == NULL){
-        w = zs;
-        zs->parent = NULL;
+    node->right = (Node *)malloc(sizeof(Node));
+    node->right->parent = node;
+    node->right->left = NULL;
+    node->right->right = NULL;
+}
+Node *reduceExternal(Node *exNode){
+    Node *exParent = exNode->parent;
+    Node *exSibliing = sibling(exNode);
+
+    if(exParent->parent == NULL){   //exParent가 root인 경우
+        exSibliing->parent = NULL;
+        tree.root = exSibliing;
     } else{
-        printf("^^\n");
-        Node *g = w->parent;
-        zs->parent = g;
-        if(w == g->left){
-            g->left = zs;
+        Node *exGrandParent = exParent->parent;
+        exSibliing->parent = exGrandParent;
+        if(exParent == exGrandParent->left){
+            exGrandParent->left = exSibliing;
         } else{
-            g->right = zs;
+            exGrandParent->right = exSibliing;
         }
     }
 
-    free(z);
-    free(w);
-    return zs;
+    free(exNode);
+    free(exParent);
+    return exSibliing;
 }
 Node *inOrderSucc(Node *node){
     node = node->right;
@@ -191,14 +179,14 @@ Node *inOrderSucc(Node *node){
     return node;
 }
 void printTree(Node *node){ //트리 전위순회 출력함수
-    if(node){
+    if(!isExternal(node)){
         printf(" %d", node->data);
         printTree(node->left);
         printTree(node->right);
     }
 }
 int isExternal(Node *node){ //외부노드 확인 함수
-    if(!node){
+    if(!node->left && !node->right){
         return 1;
     }
 
