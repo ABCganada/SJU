@@ -49,7 +49,7 @@ int main()
             getchar();
 
             Node *node = searchTree(data);
-            if(node){
+            if(!isExternal(node)){
                 printf("%d\n", node->data);
             } else{
                 printf("X\n");
@@ -133,6 +133,7 @@ void searchAndFixAfterInsert(Node *w){
         return;
     }
 
+    //불균형 노드 발견
     if(z->left->h > z->right->h){
         y = z->left;
     } else{
@@ -150,20 +151,31 @@ void searchAndFixAfterInsert(Node *w){
 Node *restruct(Node *x, Node *y, Node *z){
     Node *a, *b, *c;
     Node *t0, *t1, *t2, *t3;
-    if(z->data < y->data && y->data < x->data){
+
+    /**
+     * a, b, c 설정
+     * T0, T1, T2, T3 설정
+    */
+    if(z->data < y->data && y->data < x->data){ // z < y < x
         a = z, b = y, c = x;
         t0 = a->left, t1 = b->left, t2 = c->left, t3 = c->right;
-    } else if(x->data < y->data && y->data < z->data){
+    } else if(x->data < y->data && y->data < z->data){  // x < y < z
         a = x, b = y, c = z;
         t0 = a->left, t1 = a->right, t2 = b->right, t3 = c->right;
-    } else if(z->data < x->data && x->data < y->data){
+    } else if(z->data < x->data && x->data < y->data){  //z < x < y
         a = z, b = x, c = y;
         t0 = a->left, t1 = b->left, t2 = b->right, t3 = c->right;
-    } else{
+    } else{     //y < x < z
         a = y, b = x, c = z;
         t0 = a->left, t1 = b->left, t2 = b->right, t3 = c->right;
     }
-    if(!z->parent){
+
+    /**
+     * z가 root인지?
+     * z가 root가 아니라면 z가 zParent의 어느 쪽 자식인지?
+     * zParent를 b에 연결
+    */
+    if(z->parent == NULL){
         tree.root = b;
         b->parent = NULL;
     } else if(z->parent->left == z){
