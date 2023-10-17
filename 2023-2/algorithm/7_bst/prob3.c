@@ -249,27 +249,27 @@ int removeNode(int data){
     searchAndFixAfterRemove(zs->parent);
     return 1;
 }
-Node *reduceExternal(Node *node){
-    Node *parent = node->parent;
-    Node *sibling = getSibling(node);
+Node *reduceExternal(Node *exNode){
+    Node *exParent = exNode->parent;
+    Node *exSibling = getSibling(exNode);
 
-    if(!parent->parent){
-        tree.root = sibling;
-        sibling->parent = NULL;
+    if(!exParent->parent){
+        tree.root = exSibling;
+        exSibling->parent = NULL;
     } else{
-        Node *grandParent = parent->parent;
-        if(grandParent->left == parent){
-            grandParent->left = sibling;
-            sibling->parent = grandParent;
+        Node *exGrandParent = exParent->parent;
+        if(exGrandParent->left == exParent){
+            exGrandParent->left = exSibling;
+            exSibling->parent = exGrandParent;
         } else{
-            grandParent->right = sibling;
-            sibling->parent = grandParent;
+            exGrandParent->right = exSibling;
+            exSibling->parent = exGrandParent;
         }
     }
 
-    free(parent);
-    free(node);
-    return sibling;
+    free(exParent);
+    free(exNode);
+    return exSibling;
 }
 void searchAndFixAfterRemove(Node *node){
     while(updateHeight(node) && isBalanced(node)){
