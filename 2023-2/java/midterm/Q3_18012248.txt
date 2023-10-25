@@ -1,0 +1,43 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class Main {
+
+    public static void main(String[] args){
+
+        JFrame frame= new JFrame("Nested Panels");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panel1 = new JPanel();
+        panel1.setBackground(Color.GREEN);
+        panel1.setPreferredSize(new Dimension(300, 300));
+
+        JPanel panel2 = new JPanel();
+        panel2.setBackground(Color.ORANGE);
+        panel2.setPreferredSize(new Dimension(250, 250));
+
+        JPanel panel3 = new JPanel();
+        panel3.setBackground(Color.WHITE);
+        panel3.setPreferredSize(new Dimension(200, 200));
+
+        JLabel label1 = new JLabel("First Panel");
+        panel1.add(label1);
+
+        JLabel label2 = new JLabel("Second Panel");
+        panel2.add(label2);
+
+        JLabel label3 = new JLabel("Third Panel");
+        panel3.add(label3);
+
+        panel2.add(panel3);
+        panel1.add(panel2);
+
+        JPanel primary = new JPanel();
+        primary.setBackground(Color.BLUE);
+        primary.add(panel1);
+
+        frame.add(primary);
+        frame.pack();
+        frame.setVisible(true);
+    }
+}

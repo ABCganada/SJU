@@ -1,0 +1,61 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student{
+
+    Scanner sc = new Scanner(System.in);
+
+    String name;
+    String id;
+    ArrayList<Integer> mark;
+    double avg;
+    int n;
+
+    public Student(int n){
+        mark = new ArrayList<>();
+        avg = 0;
+        this.n = n;
+    }
+
+    public void getData(){
+        System.out.println("Student Detail");
+        System.out.print("name:");
+        this.name = sc.nextLine();
+        System.out.print("ID:");
+        this.id = sc.nextLine();
+
+        System.out.println("Subject Category:");
+        for(int i=0; i< n; i++){
+            int num = sc.nextInt();
+            mark.add(num);
+            avg += num;
+        }
+        avg /= mark.size();
+        System.out.print(avg + "/");
+        if(avg >= 50){
+            System.out.println("Pass");
+        } else{
+            System.out.println("Fail");
+        }
+        System.out.println("*******************************");
+    }
+
+
+
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Number of Student:");
+        int n = sc.nextInt();
+        Student[] students = new Student[n];
+
+        for(int i=0; i< students.length; i++){
+            students[i] = new Student(3);
+            students[i].getData();
+        }
+    }
+}

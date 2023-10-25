@@ -1,0 +1,23 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class Main {
+
+    public static void main(String[] args){
+
+        String[] name = new String[4];
+        int[] age = new int[4];
+        double[] GPA = new double[4];
+
+        for(int i=0; i< name.length; i++){
+            name[i] = JOptionPane.showInputDialog("Name");
+            age[i] = Integer.parseInt(JOptionPane.showInputDialog("Enter age"));
+            GPA[i] = Double.parseDouble(JOptionPane.showInputDialog("Enter GPA"));
+        }
+
+        int youngestAge = (age[0] < age[1] && age[0] < age[2] && age[0] < age[3]) ? age[0] : (age[1] < age[2] && age[1] < age[3]) ? age[1] : (age[2] < age[3]) ? age[2] : age[3];
+        double lowestGPA = (GPA[0] < GPA[1] && GPA[0] < GPA[2] && GPA[0] < GPA[3]) ? GPA[0] : (GPA[1] < GPA[2] && GPA[1] < GPA[3]) ? GPA[1] : (GPA[2] < GPA[3]) ? GPA[2] : GPA[3];
+
+        JOptionPane.showMessageDialog(null, "Youngest Student Age:" + youngestAge + "\n" + "Student Lowest GPA:" + lowestGPA, "Message", JOptionPane.INFORMATION_MESSAGE);
+    }
+}
