@@ -1,5 +1,7 @@
 package assginment;
 
+import java.util.Scanner;
+
 class Account{
     private int balance;
 
@@ -73,5 +75,29 @@ public class Asgnm1 {
         CheckingAccount checkingAccount2 = new CheckingAccount(3000, 1300);
         checkingAccount2.debit(1900);
         System.out.println(checkingAccount2.getBalance());
+
+        //user input version
+        Scanner sc = new Scanner(System.in);
+        int balance, interest, transactionFee, withdraw;
+
+        System.out.print("Enter balance: ");
+        balance = sc.nextInt();
+        System.out.print("Enter interest rate: ");
+        interest = sc.nextInt();
+
+        SavingsAccount savingsAccount1 = new SavingsAccount(balance, interest);
+        savingsAccount1.CalculateInterest();
+        System.out.println(savingsAccount1.getBalance());
+
+        System.out.print("Enter balance: ");
+        balance = sc.nextInt();
+        System.out.print("Enter transaction fee: ");
+        transactionFee = sc.nextInt();
+        System.out.print("Enter withdraw: ");
+        withdraw = sc.nextInt();
+
+        CheckingAccount checkingAccount1 = new CheckingAccount(balance, transactionFee);
+        checkingAccount1.debit(withdraw);
+        System.out.println(checkingAccount1.getBalance());
     }
 }
