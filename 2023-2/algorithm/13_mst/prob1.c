@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+// #include <stdlib.h>
 
 /*
 * Prim 알고리즘
@@ -12,12 +12,12 @@ typedef struct __vnode{
 }VNode;
 
 typedef struct __graph{
-    struct __vnode vList[100];
-    int matrix[100][100];
+    struct __vnode vList[101];
+    int matrix[101][101];
 }Graph;
 
 typedef struct __heap{
-    struct __vnode *queue[101];
+    struct __vnode *queue[200];
     int head, rear;
 }Heap;
 
@@ -30,8 +30,8 @@ void buildHeap(int i);
 void downHeap(int i);
 int isEmpty();
 int isInQueue(VNode *v);
-void swap(VNode *v1, VNode *v2);
-VNode removeMin();
+void swap(VNode **v1, VNode **v2);
+VNode *removeMin();
 void replaceKey(VNode *v, int w);
 
 void initVertexList();
@@ -88,7 +88,7 @@ void downHeap(int i){
 
         if(h.queue[i]->d > h.queue[smallChild]->d){
             // printf(">> swap: %d(%d) %d(%d)\n", h.queue[i]->vNum, h.queue[i]->d, h.queue[smallChild]->vNum, h.queue[smallChild]->d);
-            swap(h.queue[i], h.queue[smallChild]);
+            swap(&h.queue[i], &h.queue[smallChild]);
             i = smallChild;
         } else{
             break;
@@ -110,15 +110,16 @@ int isInQueue(VNode *v){
     }
     return 0;
 }
-void swap(VNode *v1, VNode *v2){
-    VNode tmp = *v1;
+void swap(VNode **v1, VNode **v2){
+    VNode *tmp = *v1;
     *v1 = *v2;
     *v2 = tmp;
 }
-VNode removeMin(){
-    VNode ret = *h.queue[h.head];
-    swap(h.queue[h.head], h.queue[h.rear - 1]);
+VNode *removeMin(){
+    swap(&h.queue[h.head], &h.queue[h.rear - 1]);
     h.rear--;
+
+    VNode *ret = h.queue[h.rear];
     downHeap(1);
 
     return ret;
@@ -126,8 +127,9 @@ VNode removeMin(){
 void initVertexList(){
     for(int i=0; i<n; i++){
         g.vList[i].vNum = i+1;
-        g.vList[i].d = 9999999;
+        g.vList[i].d = 99999999;
         g.vList[i].parent = NULL;
+        g.vList[i].loaction = NULL;
     }
 }
 void initMatrix(){
@@ -146,7 +148,7 @@ int primMST(int start){
     g.vList[start-1].d = 0;
 
     for(int i=0; i<n; i++){
-        if(g.matrix[start-1][i] != -1 && i != start-1){
+        if(g.matrix[start-1][i] != -1){
             g.vList[i].d = g.matrix[start-1][i];
         }
     }
@@ -159,37 +161,22 @@ int primMST(int start){
     buildHeap(1);   //힙 생성
 
     while(!isEmpty()){
-        printf("\n**** heap ****\n");
-        for(int i=h.head; i<h.rear; i++){
-            printf(" %d %d\n", h.queue[i]->vNum, h.queue[i]->d);
-        }
-        printf("**** matrix ****\n");
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                if(g.matrix[i][j] == -1){
-                    printf(" -");
-                    continue;
-                }
-                printf("%2d", g.matrix[i][j]);
-            }
-            printf("\n");
-        }
-        VNode u = removeMin();
-        printf("@@ %d %d\n", u.vNum, u.d);
-        wSum += u.d;
+        VNode *u = removeMin();
+        printf(" %d", u->vNum);
+        wSum += u->d;
 
         for(int i=0; i<n; i++){
-            if(g.matrix[u.vNum - 1][i] >= 0){
+            if(g.matrix[u->vNum - 1][i] >= 0){
                 VNode *z = &g.vList[i];
-                printf("%d Adjacent vertex: %d\n", u.vNum, z->vNum);
-                if(isInQueue(z) && g.matrix[u.vNum - 1][z->vNum - 1] < z->d){
-                    z->d = g.matrix[u.vNum - 1][z->vNum - 1];
-                    // z->parent = &g.matrix[u.vNum - 1][z->vNum - 1];
-                    downHeap(1);
+                if(isInQueue(z) && g.matrix[u->vNum - 1][z->vNum - 1] <= z->d){
+                    z->d = g.matrix[u->vNum - 1][z->vNum - 1];
+                    z->parent = &g.matrix[u->vNum - 1][z->vNum - 1];
+                    buildHeap(1);
                 }
             }
         }
     }
+    printf("\n");
 
     return wSum;
 }
