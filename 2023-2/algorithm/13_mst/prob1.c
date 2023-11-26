@@ -1,5 +1,4 @@
 #include <stdio.h>
-// #include <stdlib.h>
 
 /*
 * Prim 알고리즘
@@ -12,12 +11,12 @@ typedef struct __vnode{
 }VNode;
 
 typedef struct __graph{
-    struct __vnode vList[101];
-    int matrix[101][101];
+    struct __vnode vList[100];
+    int matrix[100][100];
 }Graph;
 
 typedef struct __heap{
-    struct __vnode *queue[200];
+    struct __vnode *queue[100];
     int head, rear;
 }Heap;
 
@@ -87,7 +86,6 @@ void downHeap(int i){
         }
 
         if(h.queue[i]->d > h.queue[smallChild]->d){
-            // printf(">> swap: %d(%d) %d(%d)\n", h.queue[i]->vNum, h.queue[i]->d, h.queue[smallChild]->vNum, h.queue[smallChild]->d);
             swap(&h.queue[i], &h.queue[smallChild]);
             i = smallChild;
         } else{
