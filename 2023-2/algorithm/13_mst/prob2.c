@@ -1,5 +1,4 @@
 #include <stdio.h>
-// #include <stdlib.h>
 
 /*
 * Kruskal 알고리즘
@@ -7,13 +6,12 @@
 */
 
 typedef struct __sack{
-    int sNum;
+    int sNum, size;
+    struct __vnode *arr[100];
 }Sack;
+
 typedef struct __vnode{
-    int vNum, d;
-    int *parent;
-    struct __vnode *loaction;
-    struct __sack sack;
+    int vNum, d, sackIdx;
 }VNode;
 
 typedef struct __enode{
@@ -34,22 +32,23 @@ typedef struct __heap{
 int n, m;
 Graph g;
 Heap h;
+Sack sack[100];
 
-void initHeap();
+void initHeap();            //힙 우선순위 큐 함수
 void buildHeap(int i);
 void downHeap(int i);
 int isEmpty();
-int isInQueue(ENode *v);
 void swap(ENode **v1, ENode **v2);
 ENode *removeMin();
 void heapSort();
 
-void initVertexList();
+void initVertexList();      //그래프 데이터 구조 초기화 함수
 void initEdgeList();
+void initSack();
 
-void insertEdge(int vNum1, int vNum2, int w);
+void insertEdge(int vNum1, int vNum2, int w);   //간선 삽입 함수
 
-int kruskalMST();
+int kruskalMST();   //Kruskal MST 알고리즘
 
 int main()
 {
@@ -111,14 +110,6 @@ int isEmpty(){
 
     return 0;
 }
-int isInQueue(ENode *e){
-    for(int i=h.head; i<h.rear; i++){
-        if(e == h.queue[i]){
-            return 1;
-        }
-    }
-    return 0;
-}
 void swap(ENode **v1, ENode **v2){
     ENode *tmp = *v1;
     *v1 = *v2;
@@ -131,36 +122,30 @@ ENode *removeMin(){
 void heapSort(){
     buildHeap(1);
 
-    
-    // printf("\nAfter build heap\n");
-    // for(int i=h.head; i<h.rear; i++){
-    //     printf("%d %d %d\n", h.queue[i]->vIdx1+1, h.queue[i]->vIdx2+1, h.queue[i]->w);
-    // }
-
     int lastIdx = h.rear-1;
     for(int i=lastIdx; i>=2; i--){
         swap(&h.queue[1], &h.queue[i]);
         h.rear--;
         downHeap(1);
     }
-
     h.rear = lastIdx + 1;
-    // printf("\nAfter heap sort\n");
-    // for(int i=h.head; i<h.rear; i++){
-    //     printf("%d %d %d\n", h.queue[i]->vIdx1+1, h.queue[i]->vIdx2+1, h.queue[i]->w);
-    // }
 }
 void initVertexList(){
     for(int i=0; i<n; i++){
         g.vList[i].vNum = i+1;
         g.vList[i].d = 99999999;
-        g.vList[i].parent = NULL;
-        g.vList[i].loaction = NULL;
-        g.vList[i].sack.sNum = i+1;
+        g.vList[i].sackIdx = i;
     }
 }
 void initEdgeList(){
     g.eListRear = 0;
+}
+void initSack(){
+    for(int i=0; i<n; i++){
+        sack[i].size = 0;
+        sack[i].sNum = g.vList[i].vNum;
+        sack[i].arr[sack[i].size++] = &g.vList[i];
+    }
 }
 void insertEdge(int vNum1, int vNum2, int w){
     g.eList[g.eListRear].vIdx1 = vNum1-1;
@@ -170,7 +155,9 @@ void insertEdge(int vNum1, int vNum2, int w){
 int kruskalMST(){
     int wSum = 0;
 
+    initSack();
     initHeap();
+
     for(int i=0; i<g.eListRear; i++){
         h.queue[h.rear++] = &g.eList[i];
     }
@@ -179,33 +166,28 @@ int kruskalMST(){
 
     while(!isEmpty()){
         ENode *e = removeMin();
-        // printf("\nremoved e : %d %d %d\n", e->vIdx1+1, e->vIdx2+1, e->w);
         int v1 = e->vIdx1;
         int v2 = e->vIdx2;
 
-        // printf("Before > > >");
-        // for(int i=0; i<n; i++){
-        //     printf(" %d", g.vList[i].sack.sNum);
-        // }
-        // printf("\n");
-
-        if(g.vList[v1].sack.sNum != g.vList[v2].sack.sNum){
+        int sackIdx1 = g.vList[v1].sackIdx;
+        int sackIdx2 = g.vList[v2].sackIdx;
+        if(sack[sackIdx1].sNum != sack[sackIdx2].sNum){
             printf(" %d", e->w);
             wSum += e->w;
 
-            int targetSackNum = g.vList[v2].sack.sNum;
-            for(int i=0; i<n; i++){
-                if(g.vList[i].sack.sNum == targetSackNum){
-                    g.vList[i].sack.sNum = g.vList[v1].sack.sNum;
-                }
+            Sack *targetSack = sack[sackIdx1].size > sack[sackIdx2].size ? &sack[sackIdx1] : &sack[sackIdx2];
+            Sack *modifySack = &sack[sackIdx1];
+            if(modifySack->sNum == targetSack->sNum){
+                modifySack = &sack[sackIdx2];
             }
-        }
 
-        // printf("After > > >");
-        // for(int i=0; i<n; i++){
-        //     printf(" %d", g.vList[i].sack.sNum);
-        // }
-        // printf("\n\n");
+            modifySack->sNum = targetSack->sNum;
+            for(int i=0; i<modifySack->size; i++){
+                targetSack->arr[targetSack->size++] = modifySack->arr[i];
+                modifySack->arr[i]->sackIdx = targetSack->arr[0]->sackIdx;
+            }
+            modifySack->size = 0;
+        }
     }
     printf("\n");
 
