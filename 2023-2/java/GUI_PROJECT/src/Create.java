@@ -8,13 +8,38 @@ public class Create {
     private JButton cancelButton;
     private JButton createButton;
     private JPanel createPanel;
+    
+    private final Index index;
 
-    public Create() {
+    public Create(Index index) {
+        this.index = index;
+        
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                String name = textField1.getText();
+                String director = textField2.getText();
+
+                if (!name.isEmpty() && !director.isEmpty()) {
+                    Movie newMovie = new Movie(name, director);
+                    
+                    index.movieList.add(newMovie);
+                    
+                    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(createButton);
+                    if (frame != null) {
+                        frame.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(createPanel, "Please enter both name and director.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(cancelButton);
-
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(createButton);
                 if (frame != null) {
                     frame.dispose();
                 }

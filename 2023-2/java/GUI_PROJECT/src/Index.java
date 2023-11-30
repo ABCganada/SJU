@@ -1,8 +1,58 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+class Movie {
+    private String name;
+    private String director;
+    private double grade;
+    private int sum;
+    private int participants;
+
+    public Movie(String name, String director) {
+        this.name = name;
+        this.director = director;
+        grade = 0;
+        sum = 0;
+        participants = 0;
+    }
+
+    public void setGrade(double grade) {
+        this.grade = grade;
+    }
+
+    public void setSum(int sum) {
+        this.sum = sum;
+    }
+
+    public void setParticipants(int participants) {
+        this.participants = participants;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public double getGrade() {
+        return grade;
+    }
+
+    public int getParticipants() {
+        return participants;
+    }
+}
+
+
 
 public class Index {
+    List<Movie> movieList = new ArrayList<>();
+
     private JPanel panel1;
     private JButton CreateButton;
     private JButton searchButton;
@@ -11,10 +61,12 @@ public class Index {
     private JButton ExitButton;
 
     public Index() {
+        initMovieList(movieList);
+
         CreateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Create createPage = new Create();
+                Create createPage = new Create(Index.this);
                 JFrame createFrame = new JFrame("Create Movie Page");
                 createFrame.setContentPane(createPage.getCreatePanel());
                 createFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -52,7 +104,7 @@ public class Index {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Search searchPage = new Search();
+                Search searchPage = new Search(Index.this);
                 JFrame searchFrame = new JFrame("Search Movie Page");
                 searchFrame.setContentPane(searchPage.getSearchPanel());
                 searchFrame.pack();
@@ -68,5 +120,50 @@ public class Index {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    void initMovieList(List<Movie> movieList) {
+        Movie movie1 = new Movie("Parasite", "Bong");
+        movie1.setParticipants(20);
+        movie1.setGrade(4.2);
+        movie1.setSum((int) (20 * 4.2));
+
+        Movie movie2 = new Movie("The Dark Knight", "Nolan");
+        movie2.setParticipants(24);
+        movie2.setGrade(4.5);
+        movie2.setSum((int) (24 * 4.5));
+
+        Movie movie3 = new Movie("Inglourious Basterds", "Tarantino");
+        movie3.setParticipants(16);
+        movie3.setSum(75);
+        movie3.setGrade(75 / 16);
+
+        Movie movie4 = new Movie("LA LA LAND", "Chazelle");
+        movie4.setParticipants(4);
+        movie4.setSum(15);
+        movie4.setGrade(15 / 4);
+
+        Movie movie5 = new Movie("Catch Me If You Can", "Spielberg");
+        movie5.setParticipants(67);
+        movie5.setSum(213);
+        movie5.setGrade(213 / 67);
+
+        Movie movie6 = new Movie("Guardians of the Galaxy Vol. 3", "James Gunn");
+        movie6.setParticipants(30);
+        movie6.setSum(125);
+        movie6.setGrade(125 / 30);
+
+        Movie movie7 = new Movie("Tazza: The High Rollers", "Choi");
+        movie7.setParticipants(11);
+        movie7.setSum(37);
+        movie7.setGrade(37 / 11);
+
+        movieList.add(movie1);
+        movieList.add(movie2);
+        movieList.add(movie3);
+        movieList.add(movie4);
+        movieList.add(movie5);
+        movieList.add(movie6);
+        movieList.add(movie7);
     }
 }
