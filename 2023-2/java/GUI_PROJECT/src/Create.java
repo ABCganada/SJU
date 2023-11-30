@@ -23,15 +23,17 @@ public class Create {
 
                 if (!name.isEmpty() && !director.isEmpty()) {
                     Movie newMovie = new Movie(name, director);
-                    
+
                     index.movieList.add(newMovie);
-                    
+
                     JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(createButton);
                     if (frame != null) {
                         frame.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(createPanel, "Please enter both name and director.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
+
+                    JOptionPane.showMessageDialog(createPanel, "Created!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(createPanel, "Please enter both name and director.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
