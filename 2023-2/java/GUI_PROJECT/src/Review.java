@@ -1,6 +1,11 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.util.List;
 
 public class Review {
     private JPanel reviewPanel;
@@ -11,9 +16,21 @@ public class Review {
     private JRadioButton a5RadioButton;
     private JButton reviewButton;
     private JButton cancelButton;
-    private JList list1;
+    private JTable movieListTable;
 
-    public Review() {
+    private Index index;
+
+    public Review(Index index) {
+        this.index = index;
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(a1RadioButton);
+        buttonGroup.add(a2RadioButton);
+        buttonGroup.add(a3RadioButton);
+        buttonGroup.add(a4RadioButton);
+        buttonGroup.add(a5RadioButton);
+
+        //Review, cancel btn action
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -24,6 +41,8 @@ public class Review {
                 }
             }
         });
+
+        index.updateTable(index.movieList, movieListTable);
     }
 
     public JPanel getReviewPanel() {

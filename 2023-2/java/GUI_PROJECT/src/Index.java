@@ -1,6 +1,10 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +98,7 @@ public class Index {
         reviewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Review reviewPage = new Review();
+                Review reviewPage = new Review(Index.this);
                 JFrame reviewFrame = new JFrame("Review Page");
                 reviewFrame.setContentPane(reviewPage.getReviewPanel());
                 reviewFrame.pack();
@@ -136,27 +140,27 @@ public class Index {
         Movie movie3 = new Movie("Inglourious Basterds", "Tarantino");
         movie3.setParticipants(16);
         movie3.setSum(75);
-        movie3.setGrade(75 / 16);
+        movie3.setGrade(75 / (double) 16);
 
         Movie movie4 = new Movie("LA LA LAND", "Chazelle");
         movie4.setParticipants(4);
         movie4.setSum(15);
-        movie4.setGrade(15 / 4);
+        movie4.setGrade(15 / (double) 4);
 
         Movie movie5 = new Movie("Catch Me If You Can", "Spielberg");
         movie5.setParticipants(67);
         movie5.setSum(213);
-        movie5.setGrade(213 / 67);
+        movie5.setGrade(213 / (double) 67);
 
-        Movie movie6 = new Movie("Guardians of the Galaxy Vol. 3", "James Gunn");
+        Movie movie6 = new Movie("Guardians of the Galaxy Vol.3", "James Gunn");
         movie6.setParticipants(30);
         movie6.setSum(125);
-        movie6.setGrade(125 / 30);
+        movie6.setGrade(125 / (double) 30);
 
-        Movie movie7 = new Movie("Tazza: The High Rollers", "Choi");
+        Movie movie7 = new Movie("Tazza", "Choi");
         movie7.setParticipants(11);
         movie7.setSum(37);
-        movie7.setGrade(37 / 11);
+        movie7.setGrade(37 / (double) 11);
 
         movieList.add(movie1);
         movieList.add(movie2);
@@ -165,5 +169,41 @@ public class Index {
         movieList.add(movie5);
         movieList.add(movie6);
         movieList.add(movie7);
+    }
+
+    public void updateTable(List<Movie> movieList, JTable movieListTable) {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Name");
+        model.addColumn("Director");
+        model.addColumn("Grade");
+        model.addColumn("Participants");
+
+        model.addRow(new Object[]{"Name", "Director", "Grade", "Participants"});
+
+        for (Movie movie : movieList) {
+            model.addRow(new Object[]{movie.getName(), movie.getDirector(), formatDecimal(movie.getGrade()), movie.getParticipants()});
+        }
+
+        movieListTable.setModel(model);
+
+        movieListTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                if (row == 0) {
+                    c.setBackground(Color.green);
+                } else {
+                    c.setBackground(table.getBackground());
+                }
+
+                return c;
+            }
+        });
+    }
+
+    public String formatDecimal(double value) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        return df.format(value);
     }
 }
