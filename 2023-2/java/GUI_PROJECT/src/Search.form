@@ -16,14 +16,6 @@
           <text value="Search Movie List"/>
         </properties>
       </component>
-      <component id="3d16a" class="javax.swing.JList" binding="list1" default-binding="true">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
       <component id="4567" class="javax.swing.JLabel">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -55,6 +47,14 @@
         <properties>
           <text value="Cancel"/>
         </properties>
+      </component>
+      <component id="99667" class="javax.swing.JTable" binding="movieListTable">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>
