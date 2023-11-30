@@ -87,7 +87,7 @@ public class Index {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Delete deletePage = new Delete();
+                Delete deletePage = new Delete(Index.this);
                 JFrame deleteFrame = new JFrame("Delete Movie Page");
                 deleteFrame.setContentPane(deletePage.getDeletePanel());
                 deleteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
