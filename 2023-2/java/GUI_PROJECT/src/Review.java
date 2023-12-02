@@ -30,6 +30,26 @@ public class Review {
         buttonGroup.add(a4RadioButton);
         buttonGroup.add(a5RadioButton);
 
+        // Set the cell renderer to change the selection color
+        movieListTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                if (isSelected) {
+                    setBackground(Color.BLUE); // Set your desired color
+                    setForeground(Color.WHITE);
+                } else {
+                    setBackground(table.getBackground());
+                    setForeground(table.getForeground());
+                }
+
+                return this;
+            }
+        });
+
         //Review, cancel btn action
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -43,6 +63,43 @@ public class Review {
         });
 
         index.updateTable(index.movieList, movieListTable);
+
+        //Review, review button
+        reviewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectRow = movieListTable.getSelectedRow();
+
+                if (selectRow > 0) {
+                    int rating = 0;
+
+                    if (a1RadioButton.isSelected()) {
+                        rating = 1;
+                    } else if (a2RadioButton.isSelected()) {
+                        rating = 2;
+                    } else if (a3RadioButton.isSelected()) {
+                        rating = 3;
+                    } else if (a4RadioButton.isSelected()) {
+                        rating = 4;
+                    } else if (a5RadioButton.isSelected()) {
+                        rating = 5;
+                    } else {
+                        JOptionPane.showMessageDialog(reviewPanel, "Please enter both movie and rating", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    Movie selectMovie = index.movieList.get(selectRow - 1);
+                    selectMovie.setParticipants(selectMovie.getParticipants() + 1);
+                    selectMovie.setSum(selectMovie.getSum() + rating);
+                    selectMovie.setGrade(selectMovie.getSum() / (double) selectMovie.getParticipants());
+
+                    index.movieList.set(selectRow - 1, selectMovie);
+                    index.updateTable(index.movieList, movieListTable);
+                } else {
+                    JOptionPane.showMessageDialog(reviewPanel, "Please enter both movie and rating", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
     public JPanel getReviewPanel() {
