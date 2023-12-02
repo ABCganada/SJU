@@ -50,6 +50,10 @@ class Movie {
     public int getParticipants() {
         return participants;
     }
+
+    public int getSum() {
+        return sum;
+    }
 }
 
 
@@ -129,13 +133,13 @@ public class Index {
     void initMovieList(List<Movie> movieList) {
         Movie movie1 = new Movie("Parasite", "Bong");
         movie1.setParticipants(20);
-        movie1.setGrade(4.2);
-        movie1.setSum((int) (20 * 4.2));
+        movie1.setSum(84);
+        movie1.setGrade(84 / (double) 20);
 
         Movie movie2 = new Movie("The Dark Knight", "Nolan");
         movie2.setParticipants(24);
-        movie2.setGrade(4.5);
-        movie2.setSum((int) (24 * 4.5));
+        movie2.setSum(108);
+        movie2.setGrade(108 / (double) 24);
 
         Movie movie3 = new Movie("Inglourious Basterds", "Tarantino");
         movie3.setParticipants(16);
@@ -186,6 +190,7 @@ public class Index {
 
         movieListTable.setModel(model);
 
+        // Set the renderer for the table cells
         movieListTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -193,10 +198,27 @@ public class Index {
 
                 if (row == 0) {
                     c.setBackground(Color.green);
+                    c.setForeground(Color.black);
                 } else {
-                    c.setBackground(table.getBackground());
+                    if (isSelected) {
+                        c.setBackground(table.getSelectionBackground());
+                        c.setForeground(table.getSelectionForeground());
+                    } else {
+                        c.setBackground(Color.WHITE);
+                        c.setForeground(Color.BLACK);
+                    }
                 }
 
+                return c;
+            }
+        });
+
+        // Set the renderer for the table header
+        movieListTable.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                c.setBackground(Color.GREEN); // Set the background color for the header row
                 return c;
             }
         });
