@@ -27,6 +27,7 @@ VNode vList[100];
 PriorityQ h;
 int n, m;
 
+//힙 함수
 void initHeap();
 void enqueue(VNode *v);
 void buildHeap(int i);
@@ -36,12 +37,12 @@ VNode *removeMin();
 int isEmpty();
 int isInQueue(VNode *v);
 
-void initVertexList();
+void initVertexList();  //vList 초기화
 
-INode *getINode(int vNum1, int vNum2, int w);
-void insertEdge(int vNum1, int vNum2, int w);
+INode *getINode(int vNum1, int vNum2, int w);   //부착간선 노드 생성
+void insertEdge(int vNum1, int vNum2, int w);   //부착간선 삽입
 
-void DijkstraShortestPath(int s);
+void DijkstraShortestPath(int s);   //다익스트라 알고리즘
 
 void freeMemory();
 
@@ -55,13 +56,13 @@ int main()
     for(int i=0; i<m; i++){
         scanf("%d%d%d", &vNum1, &vNum2, &w);
 
-        insertEdge(vNum1, vNum2, w);
+        insertEdge(vNum1, vNum2, w);    //부착간선 삽입 vNum1 -> vNum2, vNum2 -> vNum1 둘 다 해줌
         insertEdge(vNum2, vNum1, w);
     }
 
-    DijkstraShortestPath(s);
+    DijkstraShortestPath(s);    //다익스트라 알고리즘 호출
 
-    for(int i=0; i<n; i++){
+    for(int i=0; i<n; i++){ //출력
         if(i != s-1 && vList[i].distance != INIT_D_VALUE){
             printf("%d %d\n", vList[i].vNum, vList[i].distance);
         }
@@ -118,12 +119,12 @@ void swap(VNode **v1, VNode **v2){
     (*v2)->locator = *v2;
 }
 VNode *removeMin(){
-    VNode *ret = h.pq[h.head];
-    swap(&h.pq[h.head], &h.pq[h.rear-1]);
-    h.rear--;
+    VNode *ret = h.pq[h.head];  //return할 vNode.
+    swap(&h.pq[h.head], &h.pq[h.rear-1]);   //맨 처음이랑 맨 뒤 스왑
+    h.rear--;   //힙의 rear 하나 줄여줌
     buildHeap(1);
 
-    ret->locator = NULL;
+    ret->locator = NULL;    //리턴할 노드 로케이터 NULL. 힙 구조에서 remove 됐으니깐
 
     return ret;
 }
@@ -134,7 +135,7 @@ int isEmpty(){
     return 0;
 }
 int isInQueue(VNode *v){
-    return v->locator != NULL;
+    return v->locator != NULL;  //로케이터가 NULL이 아니면 힙에 있다는 것
 }
 void initVertexList(){
     for(int i=0; i<n; i++){
@@ -142,7 +143,7 @@ void initVertexList(){
         vList[i].distance = INIT_D_VALUE;
         vList[i].locator = NULL;
 
-        vList[i].iList = (INode *)malloc(sizeof(INode));
+        vList[i].iList = (INode *)malloc(sizeof(INode));    //부착간선 리스트 헤더 생성
         vList[i].iList->next = NULL;
     }
 }
@@ -178,16 +179,16 @@ void DijkstraShortestPath(int s){
     buildHeap(1);   //힙 생성
 
     while(!isEmpty()){
-        VNode *u = removeMin();
+        VNode *u = removeMin(); //u는 힙에서 최소 추출한 것
+        INode *e = u->iList->next;  //e는 추출 노드 부착간선 리스트 돌게 됨.
 
-        INode *e = u->iList->next;
         while(e){
-            VNode *z = &vList[e->vIdx2];
+            VNode *z = &vList[e->vIdx2];    //z는 e의 vNum2 정점 노드
             
             if(isInQueue(z)){
                 if(z->distance > u->distance + e->w){
                     z->distance = u->distance + e->w;
-                    buildHeap(1);
+                    buildHeap(1);   //거리 갱신 했으니까 다시 힙 생성
                 }
             }
             e = e->next;
