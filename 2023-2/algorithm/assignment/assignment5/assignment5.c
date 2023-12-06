@@ -212,7 +212,7 @@ void DijkstraShortestPath(char start, char target){     //다익스트라 알고
 }
 void printResult(char start, char target){  //출력 함수
     int targetIdx = target-'A';
-    printf("%c, %c : 최단거리 = %d, 최단경로 수 = %d\n", start, target, vList[targetIdx].distance, vList[targetIdx].equalPathNum);
+    printf("최단거리 = %d, 최단경로 수 = %d\n", vList[targetIdx].distance, vList[targetIdx].equalPathNum);
 }
 void freeMemory(){  //메모리 해제 함수
     for(int i=0; i<VERTEX_NUM; i++){
