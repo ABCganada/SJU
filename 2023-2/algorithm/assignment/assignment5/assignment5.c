@@ -8,7 +8,7 @@
 
 #define INIT_D_VALUE 30000  //정점 노드 초기 거리값
 #define VERTEX_NUM 6        //정점 노드 수
-#define EDGE_NUM 9          //간선 노드 수
+#define TEST_NUM 4          //테스트 횟수
 
 typedef struct __priorityQ{ //우선순위큐
     struct __vnode *pq[101];
@@ -51,17 +51,15 @@ void freeMemory();  //메모리 해제
 
 int main()
 {
-    DijkstraShortestPath('C', 'A');
-    freeMemory();
+    char start, target;
 
-    DijkstraShortestPath('C', 'F');
-    freeMemory();
+    for(int i=0; i<TEST_NUM; i++){  //테스트 횟수만큼 반복
+        scanf("%c, %c", &start, &target);  //출발, 도착 정점 입력시 ','가 들어감
+        getchar();
 
-    DijkstraShortestPath('F', 'C');
-    freeMemory();
-
-    DijkstraShortestPath('B', 'D');
-    freeMemory();
+        DijkstraShortestPath(start, target);    //다익스트라 알고리즘 호출
+        freeMemory();   //부착간선리스트 메모리 해제
+    }
 
     return 0;
 }
