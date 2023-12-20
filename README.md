@@ -14,12 +14,13 @@
 - Computer network
 
 ## 2023-1
-- <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Datastructure">Data Structure</a>
-- <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Database">Database</a>
+- <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Datastructure">자료구조</a>
+- <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Database">데이터베이스</a>
   - <a href="https://velog.io/@mk9712/Database-Design">blog</a>
+  - <a href="">final project</a>
 
 ## 2023-2
-- <a href="https://github.com/ABCganada/SJU/tree/main/2023-2/algorithm">Algorithm</a>
+- <a href="https://github.com/ABCganada/SJU/tree/main/2023-2/algorithm">알고리즘</a>
   - <a href="https://velog.io/@mk9712/Algorithm-1.-Selection-Sort">blog</a>
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-2/java">Java Programming</a>
   - <a href="https://velog.io/@mk9712/Java-1.-Class">blog</a>
