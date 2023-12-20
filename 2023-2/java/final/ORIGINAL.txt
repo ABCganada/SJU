@@ -1,0 +1,3 @@
+NAME:sejong
+ID:2014
+Age:65
