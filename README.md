@@ -17,7 +17,7 @@
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Datastructure">자료구조</a>
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Database">데이터베이스</a>
   - <a href="https://velog.io/@mk9712/Database-Design">blog</a>
-  - <a href="">final project</a>
+  - <a href="https://github.com/ABCganada/SJU/blob/main/2023-1/Database/DB-MiniProject3-%EC%8B%A0%EB%AF%BC%EA%B8%B0/DB-MiniProject3-%EC%8B%A0%EB%AF%BC%EA%B8%B0-report.pdf">프로젝트 보고서</a>
 
 ## 2023-2
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-2/algorithm">알고리즘</a>
