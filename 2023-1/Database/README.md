@@ -76,8 +76,46 @@ on delete set default
   - 최초 total_packs(배달한 택배 개수), salary(급여) 2개의 attribute를 디자인했으나 driver 엔티티의 pk가 아닌 total_packs 컬럼이 salary 컬럼을 결정하는 부분 함수 종속성이 존재했다.
   - 또한, total_packs가 변동되면 salary 마찬가지로 수정해주지 않는 이상 데이터 무결성이 깨져버리는 갱신 이상이 발생하기 때문에 salary를 driver 엔티티의 컬럼에서 제외시켰다.
 
-
-
-
-
 <br>
+
+## 비즈니스 시나리오
+
+### Select
+ex1. Branch ID, 이름과 Manager branch ID, 이름을 확인한다.
+
+```sql
+```
+
+ex2. Driver 리스트를 배달 개수의 내림차순으로 정렬하고, 총 패키지 개수와 Salary를 확인한다.
+
+```sql
+```
+
+### Insert
+ex. Customer 정보를 삽입한다.
+
+```sql
+```
+
+### Delete
+ex1. Driver 배정이 되지 않은 Car를 삭제한다.
+
+```sql
+```
+
+ex2. 담당하고 있는 Customer가 0인 Driver를 해고한다.
+
+```sql
+```
+
+
+### Update
+ex1. 배송지가 jeju인 택배에 대한 추가 요금을 반영한다.
+
+```sql
+```
+
+ex2. 각 Driver가 현재 담당하고 있는 Package 개수와 총 택배 개수를 갱신한다.
+
+```sql
+```
