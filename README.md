@@ -8,10 +8,10 @@
 
 ## 2022-2
 - <a href="https://github.com/ABCganada/SJU/tree/main/2022-2/Advanced.C">Advanced C Programming</a>
-- Linear algebra
-- Discrete mathematics
-- Computer architecture
-- Computer network
+- 선형대수프로그래밍
+- 이산수학프로그래밍
+- 컴퓨터구조
+- 컴퓨터네트워크
 
 ## 2023-1
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-1/Datastructure">자료구조</a>
@@ -24,4 +24,4 @@
   - <a href="https://velog.io/@mk9712/Algorithm-1.-Selection-Sort">blog</a>
 - <a href="https://github.com/ABCganada/SJU/tree/main/2023-2/java">Java Programming</a>
   - <a href="https://velog.io/@mk9712/Java-1.-Class">blog</a>
-- <a href="https://github.com/ABCganada/sandwichAI-be">Capstone (Project)</a>
+- <a href="https://github.com/ABCganada/sandwichAI-be">Capstone Design(Project)</a>
